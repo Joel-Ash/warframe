@@ -34,7 +34,9 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				max-width: calc(100% - 2em);
 				margin: auto;
 				padding: 1em;
-				color: rgb(var(--gray-dark));
+
+				/* ✅ 다크/라이트 자동 대응 */
+				color: var(--text-main);
 			}
 			.title {
 				margin-bottom: 1em;
@@ -44,6 +46,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
+				color: var(--text-strong);
 			}
 			.date {
 				margin-bottom: 0.5em;
@@ -80,43 +83,115 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 					<slot />
 				</div>
 			</article>
-<style>
-  /* ===== 본문 전체 ===== */
-  .prose {
-    font-size: 1rem;      /* 기본 가독성 크기 */
-    line-height: 1.8;     /* 장문 읽기 최적 */
-  }
 
-  /* ===== 제목 계층 ===== */
-  .prose h1 {
-    font-size: 2rem;
-    margin-top: 2rem;
-  }
+			<style>
+				/* ===== 본문 전체 ===== */
+				.prose {
+					font-size: 1rem;
+					line-height: 1.8;
+				}
 
-  .prose h2 {
-    font-size: 1.5rem;
-    margin-top: 2rem;
-  }
+				/* ===== 제목 계층 ===== */
+				.prose h1 {
+					font-size: 2rem;
+					margin-top: 2rem;
+				}
 
-  .prose h3 {
-    font-size: 1.25rem;
-    margin-top: 1.5rem;
-  }
+				.prose h2 {
+					font-size: 1.5rem;
+					margin-top: 2rem;
+				}
 
-  /* ===== 리스트 (기본 불릿 유지) ===== */
-  .prose ul {
-    margin-left: 1.25em;   /* 너무 튀지 않게 */
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-  }
+				.prose h3 {
+					font-size: 1.25rem;
+					margin-top: 1.5rem;
+				}
 
-  .prose ul li {
-    margin: 0.3em 0;       /* 줄 간격만 살짝 */
-  }
-</style>
+				/* ===== 리스트 (기본 불릿 유지) ===== */
+				.prose ul {
+					margin-left: 1.25em;
+					margin-top: 0.5em;
+					margin-bottom: 0.5em;
+				}
 
-
+				.prose ul li {
+					margin: 0.3em 0;
+				}
+			</style>
 		</main>
+
 		<Footer />
+
+		<!-- ✅ 여기! 토글 스크립트 (body 끝나기 직전 1번만) -->
+		<script>
+			(function () {
+				const STORAGE_KEY = "theme";
+				const root = document.documentElement;
+				const btn = document.querySelector("[data-theme-toggle]");
+
+				function getSystemTheme() {
+					return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+						? "dark"
+						: "light";
+				}
+
+				function apply(theme) {
+					if (theme === "system") {
+						root.removeAttribute("data-theme");
+					} else {
+						root.setAttribute("data-theme", theme);
+					}
+					updateButton();
+				}
+
+				function getCurrentTheme() {
+					return root.getAttribute("data-theme") || "system";
+				}
+
+				function updateButton() {
+					if (!btn) return;
+
+					const t = getCurrentTheme();
+					const effective = t === "system" ? getSystemTheme() : t;
+
+					const icon = btn.querySelector(".theme-toggle__icon");
+					const text = btn.querySelector(".theme-toggle__text");
+
+					if (effective === "dark") {
+						if (icon) icon.textContent = ☀️";
+						if (text) text.textContent = "라이트";
+					} else {
+						if (icon) icon.textContent = "🌙";
+						if (text) text.textContent = "다크";
+					}
+
+					btn.setAttribute("aria-label", effective === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환");
+				}
+
+				// 초기 적용: 저장값 → 없으면 system
+				const saved = localStorage.getItem(STORAGE_KEY) || "system";
+				apply(saved);
+
+				// system일 때만 시스템 변경 반영
+				const mq = window.matchMedia("(prefers-color-scheme: dark)");
+				if (mq && mq.addEventListener) {
+					mq.addEventListener("change", function () {
+						if (getCurrentTheme() === "system") updateButton();
+					});
+				}
+
+				// 클릭 토글 (light <-> dark)
+				if (btn) {
+					btn.addEventListener("click", function () {
+						const current = getCurrentTheme();
+						const effective = current === "system" ? getSystemTheme() : current;
+						const next = effective === "dark" ? "light" : "dark";
+
+						localStorage.setItem(STORAGE_KEY, next);
+						apply(next);
+					});
+				}
+			})();
+		</script>
 	</body>
 </html>

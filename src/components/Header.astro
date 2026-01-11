@@ -6,103 +6,129 @@ import HeaderLink from './HeaderLink.astro';
 <header>
 	<nav>
 		<h2><a href="/main">{SITE_TITLE}</a></h2>
+
 		<div class="internal-links">
 			<HeaderLink href="/main">메인</HeaderLink>
 			<HeaderLink href="/guide">가이드</HeaderLink>
 			<HeaderLink href="/moding">모딩</HeaderLink>
 		</div>
-		
+
+		<!-- ✅ 다크모드 토글 -->
+		<button class="theme-toggle" type="button" data-theme-toggle aria-label="테마 전환">
+			<span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+			<span class="theme-toggle__text">다크</span>
+		</button>
 	</nav>
 </header>
+
 <style>
+	/* ✅ 모바일에서 헤더가 흰색으로 뜨는 문제는 여기서 해결:
+	   global.css에 있는 --header-bg/--header-text 를 사용 */
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: white;
+		background: var(--header-bg);
+		color: var(--header-text);
 		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		border-bottom: 1px solid var(--border-subtle);
+		position: sticky;
+		top: 0;
+		z-index: 1000;
+
+		backdrop-filter: saturate(1.2) blur(8px);
+		-webkit-backdrop-filter: saturate(1.2) blur(8px);
 	}
+
+	nav {
+		position: relative; /* 가운데 링크 absolute 기준 */
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 0.5rem;
+		min-height: 56px;
+	}
+
 	h2 {
 		margin: 0;
 		font-size: 1em;
 	}
 
-	h2 a,
-	h2 a.active {
+	h2 a {
 		text-decoration: none;
+		color: var(--header-text);
+		font-weight: 800;
+		letter-spacing: 0.02em;
 	}
-	header {
-  margin: 0;
-  padding: 0 1em;           /* 헤더 두께 유지용 */
-  background: white;
-  box-shadow: 0 2px 8px rgba(var(--black), 5%);
-}
 
-nav {
-  position: relative;       /* absolute 기준점 */
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;  /* 로고는 왼쪽 고정 */
-  min-height: 56px;         /* 검은 영역(헤더 높이) 유지 */
-}
-
-.internal-links {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* 기존 링크 스타일 유지 */
-nav a {
-  display: flex;            /* ← 세로 가운데 정렬 */
-  align-items: center;
-  height: 100%;             /* ← border가 nav 바닥으로 내려감 */
-  padding: 0 0.9rem;        /* ← 세로 padding 제거! */
-  border-bottom: 4px solid transparent;
-  text-decoration: none;
-  color: rgba(255,255,255,.75); /* 기본(비활성) */
-  font-weight: 600;             /* 기본 두께 */
-
-  font-weight: 600;          /* ← 글씨 두께 */
-  letter-spacing: 0.02em;    /* ← 가독성 (선택) */
-}
-
-nav a.active {
-  border-bottom-color: var(--accent);
-  color: var(--accent);         /* 활성만 보라 */
-  font-weight: 800;             /* 활성만 더 두껍게 */
-}
-
-/* (선택) 모바일에서 가운데탭 숨기고 싶으면 유지 */
-@media (max-width: 720px) {
-  .internal-links {
-    position: static;
-    transform: none;
-    margin-left: auto;  /* 모바일에서는 그냥 오른쪽으로 */
-  }
-}
-{
-		  padding: 1em 0.5em;
-  color: var(--black);
-  border-bottom: 4px solid transparent;
-  text-decoration: none;
-
-  font-weight: 600;          /* ← 글씨 두께 */
-  letter-spacing: 0.02em;    /* ← 가독성 (선택) */
-	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: var(--accent);
-	}
-	.social-links,
-	.social-links a {
+	.internal-links {
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
 		display: flex;
+		align-items: center;
+		gap: 0.5rem;
 	}
+
+	/* HeaderLink.astro가 결국 a로 렌더되니까 nav a에 스타일 걸면 됨 */
+	nav :global(a) {
+		display: flex;
+		align-items: center;
+		height: 100%;
+		padding: 0 0.9rem;
+		border-bottom: 4px solid transparent;
+		text-decoration: none;
+
+		color: color-mix(in srgb, var(--header-text) 75%, transparent);
+		font-weight: 600;
+		letter-spacing: 0.02em;
+	}
+
+	nav :global(a.active) {
+		border-bottom-color: var(--accent);
+		color: var(--accent);
+		font-weight: 800;
+	}
+
+	/* ✅ 토글 버튼 */
+	.theme-toggle {
+		margin-left: auto;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4rem;
+
+		padding: 0.45rem 0.65rem;
+		border-radius: 10px;
+
+		border: 1px solid var(--border-subtle);
+		background: var(--card-bg);
+		color: var(--header-text);
+
+		cursor: pointer;
+		user-select: none;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.theme-toggle:hover { transform: translateY(-1px); }
+	.theme-toggle:active { transform: translateY(0); }
+
+	.theme-toggle__icon {
+		font-size: 1.05rem;
+		line-height: 1;
+	}
+
+	.theme-toggle__text {
+		font-size: 0.9rem;
+	}
+
 	@media (max-width: 720px) {
-		.social-links {
-			display: none;
+		/* 모바일에선 가운데 탭을 반응형으로 */
+		.internal-links {
+			position: static;
+			transform: none;
+			margin-left: auto;
+			margin-right: 0.25rem;
 		}
+		.theme-toggle__text { display: none; }
 	}
 </style>
