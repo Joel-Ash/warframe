@@ -11,10 +11,14 @@
             "id": "87675cc0374d0641",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "guide/micro-tips/숙련도-2탄.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "새 탭"
+              "title": "숙련도-2탄"
             }
           }
         ]
@@ -178,10 +182,13 @@
   },
   "active": "87675cc0374d0641",
   "lastOpenFiles": [
+    "guide/missions/중재-강철의-길.md",
+    "guide/micro-tips/숙련도-2탄.md",
+    "여기 참고.md",
+    "2026-01-10.md",
+    "guide/micro-tips/숙련도-1탄.md",
     "moding/warframes/네크로스-[농부].md",
     "main/warframe-메인-퀘스트.md",
-    "guide/micro-tips/숙련도-1탄.md",
-    "guide/missions/중재-강철의-길.md",
     "guide/basics/치명타.md",
     "guide/basics/멀티샷.md",
     "guide/basics/무제.md",
@@ -194,7 +201,6 @@
     "main/warframe 메인 퀘스트.md",
     "moding/warframes/네크로스 [농부].md",
     "moding/images",
-    "moding/새 폴더",
-    "2026-01-10.md"
+    "moding/새 폴더"
   ]
 }
