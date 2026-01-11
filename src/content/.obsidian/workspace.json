@@ -1,0 +1,200 @@
+{
+  "main": {
+    "id": "52de427e916ec1ec",
+    "type": "split",
+    "children": [
+      {
+        "id": "510bb9b5c9a95000",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "87675cc0374d0641",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "새 탭"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "3d0311e6d7e9495c",
+    "type": "split",
+    "children": [
+      {
+        "id": "8377070e1c1caf89",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3907f40ed8a42f0d",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "4ea864ee4a02b7d2",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "검색"
+            }
+          },
+          {
+            "id": "dbed6baf7448135e",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "북마크"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "7a9f534a02515321",
+    "type": "split",
+    "children": [
+      {
+        "id": "fef08f66e3695863",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "71de082325a7808a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "백링크"
+            }
+          },
+          {
+            "id": "f92fa41b481dbe40",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "나가는 링크"
+            }
+          },
+          {
+            "id": "03dec3a359f7ef2a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "태그"
+            }
+          },
+          {
+            "id": "5df38efb42e83de3",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "모든 속성"
+            }
+          },
+          {
+            "id": "5c58e6d5788e095b",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "개요"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:빠른 전환기 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false
+    }
+  },
+  "active": "87675cc0374d0641",
+  "lastOpenFiles": [
+    "moding/warframes/네크로스-[농부].md",
+    "main/warframe-메인-퀘스트.md",
+    "guide/micro-tips/숙련도-1탄.md",
+    "guide/missions/중재-강철의-길.md",
+    "guide/basics/치명타.md",
+    "guide/basics/멀티샷.md",
+    "guide/basics/무제.md",
+    "guide/basics/치명타 유형.md",
+    "guide/images/critical-damage-scaling-table.png",
+    "guide/images/primed-target-cracker.png",
+    "guide/images/스크린샷 2026-01-11 200027.png",
+    "guide/images/스크린샷 2026-01-11 195813.png",
+    "guide/images",
+    "main/warframe 메인 퀘스트.md",
+    "moding/warframes/네크로스 [농부].md",
+    "moding/images",
+    "moding/새 폴더",
+    "2026-01-10.md"
+  ]
+}

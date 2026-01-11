@@ -1,0 +1,251 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+// ✅ guide 컬렉션 글 불러오기
+const posts = (await getCollection('guide')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// ✅ "파트(폴더)" 기준으로 그룹핑
+function getPartFromId(id: string) {
+  const normalized = id.replaceAll('\\', '/');
+  return normalized.split('/')[0] || 'etc';
+}
+
+// ✅ 폴더명 -> 화면 표시명
+const PART_LABELS: Record<string, string> = {
+  'basics': '기초 이해',
+  'mod-system': '모드 시스템',
+  'upgrades': '모드 외 업그레이드',
+  'missions': '미션',
+  'micro-tips': '미세먼지 시리즈',
+};
+
+// ✅ 표시 순서 고정
+const PART_ORDER = ['basics', 'mod-system', 'upgrades', 'missions', 'micro-tips'];
+
+// ✅ 그룹 생성
+const grouped = new Map<string, typeof posts>();
+for (const post of posts) {
+  const part = getPartFromId(post.id);
+  if (!grouped.has(part)) grouped.set(part, []);
+  grouped.get(part)!.push(post);
+}
+
+// ✅ 그룹 정렬
+const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
+  const ia = PART_ORDER.indexOf(a);
+  const ib = PART_ORDER.indexOf(b);
+  return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+});
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <BaseHead title={`${SITE_TITLE} - Guide`} description={SITE_DESCRIPTION} />
+    <style>
+      main {
+        width: 960px;
+      }
+
+      /* 🔹 가이드 탭 안내 문구 */
+      .guide-notice {
+        margin: 3.5rem auto 4.5rem;
+        max-width: 820px;
+        text-align: center;
+      }
+
+      .guide-notice p {
+        margin: 0.6rem 0;
+        font-size: 1.32rem;
+        font-weight: 700;
+        line-height: 1.65;
+        color: rgba(180, 200, 255, 0.85);
+      }
+
+      .category {
+        margin: 1.2rem 0 1.6rem;
+        padding: 0;
+      }
+
+      details {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.15);
+      }
+
+      summary {
+        cursor: pointer;
+        list-style: none;
+        padding: 0.9rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        user-select: none;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .category-title {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      .count {
+        opacity: 0.7;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .chev {
+        width: 10px;
+        height: 10px;
+        border-right: 2px solid rgba(255, 255, 255, 0.7);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+        transform: rotate(-45deg);
+        transition: transform 0.18s ease;
+      }
+
+      details[open] .chev {
+        transform: rotate(45deg);
+      }
+
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        list-style-type: none;
+        margin: 0;
+        padding: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      ul li {
+        width: calc(50% - 0.6rem);
+      }
+
+      ul li * {
+        text-decoration: none;
+        transition: 0.2s ease;
+      }
+
+      ul li img {
+        margin-bottom: 0.5rem;
+        border-radius: 12px;
+      }
+
+      ul li a {
+        display: block;
+        padding: 0.2rem 0.2rem 0.4rem;
+        border-radius: 10px;
+      }
+
+      .title {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.92);
+        line-height: 1.2;
+        font-weight: 700;
+      }
+
+      .date {
+        margin: 0.35rem 0 0;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 0.92rem;
+      }
+
+      ul li a:hover .title,
+      ul li a:hover .date {
+        color: rgb(var(--accent));
+      }
+
+      ul li a:hover img {
+        box-shadow: var(--box-shadow);
+      }
+
+      @media (max-width: 720px) {
+        main {
+          width: 100%;
+        }
+        .guide-notice p {
+          font-size: 0.95rem;
+        }
+        ul {
+          gap: 0.7rem;
+        }
+        ul li {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+
+    <main>
+      <!-- 🔹 가이드 탭 설명 문구 -->
+      <section class="guide-notice">
+        <p>
+          해당 가이드는 작성자의 개인적인 의견과 플레이 경험을 바탕으로<br />
+          Warframe에서 공개된 공식 정보 및 커뮤니티 자료를 참고하여
+          재해석·정리한 가이드입니다.
+        </p>
+        <p>
+          공식적인 기준이나 절대적인 해답을 제시하지 않으며<br />
+          메타 변화 및 개인 취향에 따라 내용이 달라질 수 있으니
+          참고 자료로 활용해 주시기 바랍니다.
+        </p>
+      </section>
+
+      {groups.map(([partKey, list]) => {
+        const label = PART_LABELS[partKey] ?? partKey;
+
+        return (
+          <section class="category">
+            <details>
+              <summary>
+                <span class="category-title">
+                  <span class="chev" aria-hidden="true"></span>
+                  <span>{label}</span>
+                </span>
+                <span class="count">{list.length}개</span>
+              </summary>
+
+              <ul>
+                {list.map((post) => (
+                  <li>
+                    <a href={`/guide/${post.id}/`}>
+                      {post.data.heroImage && (
+                        <Image width={720} height={360} src={post.data.heroImage} alt="" />
+                      )}
+                      <h4 class="title">{post.data.title}</h4>
+                      <p class="date">
+                        <FormattedDate date={post.data.pubDate} />
+                      </p>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </section>
+        );
+      })}
+    </main>
+
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,122 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+
+type Props = CollectionEntry<'main'>['data'];
+
+const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+---
+
+<html lang="ko">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+			main {
+				width: calc(100% - 2em);
+				max-width: 100%;
+				margin: 0;
+			}
+			.hero-image {
+				width: 100%;
+			}
+			.hero-image img {
+				display: block;
+				margin: 0 auto;
+				border-radius: 12px;
+				box-shadow: var(--box-shadow);
+			}
+			.prose {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 1em;
+				color: rgb(var(--gray-dark));
+			}
+			.title {
+				margin-bottom: 1em;
+				padding: 1em 0;
+				text-align: center;
+				line-height: 1;
+			}
+			.title h1 {
+				margin: 0 0 0.5em 0;
+			}
+			.date {
+				margin-bottom: 0.5em;
+				color: rgb(var(--gray));
+			}
+			.last-updated-on {
+				font-style: italic;
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<article>
+				<div class="hero-image">
+					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+				</div>
+				<div class="prose">
+					<div class="title">
+						<div class="date">
+							<FormattedDate date={pubDate} />
+							{
+								updatedDate && (
+									<div class="last-updated-on">
+										Last updated on <FormattedDate date={updatedDate} />
+									</div>
+								)
+							}
+						</div>
+						<h1>{title}</h1>
+						<hr />
+					</div>
+					<slot />
+				</div>
+			</article>
+<style>
+  /* ===== 본문 전체 ===== */
+  .prose {
+    font-size: 1rem;      /* 기본 가독성 크기 */
+    line-height: 1.8;     /* 장문 읽기 최적 */
+  }
+
+  /* ===== 제목 계층 ===== */
+  .prose h1 {
+    font-size: 2rem;
+    margin-top: 2rem;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  /* ===== 리스트 (기본 불릿 유지) ===== */
+  .prose ul {
+    margin-left: 1.25em;   /* 너무 튀지 않게 */
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .prose ul li {
+    margin: 0.3em 0;       /* 줄 간격만 살짝 */
+  }
+</style>
+
+
+		</main>
+		<Footer />
+	</body>
+</html>

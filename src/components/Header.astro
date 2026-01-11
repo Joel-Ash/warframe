@@ -1,0 +1,108 @@
+---
+import { SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+---
+
+<header>
+	<nav>
+		<h2><a href="/main">{SITE_TITLE}</a></h2>
+		<div class="internal-links">
+			<HeaderLink href="/main">메인</HeaderLink>
+			<HeaderLink href="/guide">가이드</HeaderLink>
+			<HeaderLink href="/moding">모딩</HeaderLink>
+		</div>
+		
+	</nav>
+</header>
+<style>
+	header {
+		margin: 0;
+		padding: 0 1em;
+		background: white;
+		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+	}
+	h2 {
+		margin: 0;
+		font-size: 1em;
+	}
+
+	h2 a,
+	h2 a.active {
+		text-decoration: none;
+	}
+	header {
+  margin: 0;
+  padding: 0 1em;           /* 헤더 두께 유지용 */
+  background: white;
+  box-shadow: 0 2px 8px rgba(var(--black), 5%);
+}
+
+nav {
+  position: relative;       /* absolute 기준점 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;  /* 로고는 왼쪽 고정 */
+  min-height: 56px;         /* 검은 영역(헤더 높이) 유지 */
+}
+
+.internal-links {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 기존 링크 스타일 유지 */
+nav a {
+  display: flex;            /* ← 세로 가운데 정렬 */
+  align-items: center;
+  height: 100%;             /* ← border가 nav 바닥으로 내려감 */
+  padding: 0 0.9rem;        /* ← 세로 padding 제거! */
+  border-bottom: 4px solid transparent;
+  text-decoration: none;
+  color: rgba(255,255,255,.75); /* 기본(비활성) */
+  font-weight: 600;             /* 기본 두께 */
+
+  font-weight: 600;          /* ← 글씨 두께 */
+  letter-spacing: 0.02em;    /* ← 가독성 (선택) */
+}
+
+nav a.active {
+  border-bottom-color: var(--accent);
+  color: var(--accent);         /* 활성만 보라 */
+  font-weight: 800;             /* 활성만 더 두껍게 */
+}
+
+/* (선택) 모바일에서 가운데탭 숨기고 싶으면 유지 */
+@media (max-width: 720px) {
+  .internal-links {
+    position: static;
+    transform: none;
+    margin-left: auto;  /* 모바일에서는 그냥 오른쪽으로 */
+  }
+}
+{
+		  padding: 1em 0.5em;
+  color: var(--black);
+  border-bottom: 4px solid transparent;
+  text-decoration: none;
+
+  font-weight: 600;          /* ← 글씨 두께 */
+  letter-spacing: 0.02em;    /* ← 가독성 (선택) */
+	}
+	nav a.active {
+		text-decoration: none;
+		border-bottom-color: var(--accent);
+	}
+	.social-links,
+	.social-links a {
+		display: flex;
+	}
+	@media (max-width: 720px) {
+		.social-links {
+			display: none;
+		}
+	}
+</style>
