@@ -2,8 +2,13 @@
   The CSS in this style tag is based off of Bear Blog's default CSS.
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
+*/
 
+/* =========================
+   Theme tokens
+   ========================= */
+
+/* 기본(라이트) */
 :root {
 	--accent: #2337ff;
 	--accent-dark: #000d8a;
@@ -13,6 +18,7 @@
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
 
+	/* 기존 그라데이션 유지 */
 	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
 
 	--box-shadow:
@@ -20,68 +26,85 @@
 		0 8px 24px rgba(var(--gray), 33%),
 		0 16px 32px rgba(var(--gray), 33%);
 
-	/* =========================
-	   🌞 Theme Tokens (Light default)
-	   ========================= */
-	--bg-main: linear-gradient(var(--gray-gradient)) no-repeat;
+	/* ✅ 테마용 추가 변수 (라이트) */
+	--bg-main: #ffffff;
+	--bg-grad-top: rgba(var(--gray-light), 50%);
+	--bg-grad-bottom: #ffffff;
+
 	--text-main: rgb(var(--gray-dark));
-	--heading-color: rgb(var(--black));
+	--text-strong: rgb(var(--black));
+
+	--card-bg: rgba(255, 255, 255, 0.6);
+	--border-subtle: rgba(0, 0, 0, 0.08);
+
 	--code-bg: rgb(var(--gray-light));
+
+	/* 헤더 */
+	--header-bg: rgba(255, 255, 255, 0.85);
+	--header-text: rgb(var(--black));
 }
 
-/* =========================
-   🌙 Auto Dark Mode (system)
-   ========================= */
+/* ✅ 다크 테마: 시스템이 다크면 기본으로 적용 */
 @media (prefers-color-scheme: dark) {
 	:root {
-		--accent: #9bbcff;
-		--accent-dark: #5f7cff;
+		--bg-main: #0b0e14;
+		--bg-grad-top: rgba(18, 22, 32, 0.9);
+		--bg-grad-bottom: #0b0e14;
 
-		/* Bear Blog tokens override */
-		--gray-light: 40, 44, 60;
-		--gray-dark: 220, 224, 240;
-		--gray-gradient: rgba(18, 20, 28, 90%), rgba(14, 14, 17, 100%);
+		--text-main: rgba(235, 240, 255, 0.86);
+		--text-strong: rgba(255, 255, 255, 0.92);
 
-		/* Theme tokens */
-		--bg-main: #0e0e11;
-		--text-main: #e6e8ef;
-		--heading-color: #f2f4ff;
-		--code-bg: #1e2230;
+		--card-bg: rgba(20, 24, 34, 0.65);
+		--border-subtle: rgba(255, 255, 255, 0.10);
 
-		--box-shadow:
-			0 2px 10px rgba(0, 0, 0, 35%),
-			0 10px 28px rgba(0, 0, 0, 40%),
-			0 18px 40px rgba(0, 0, 0, 45%);
+		--code-bg: rgba(255, 255, 255, 0.08);
+
+		--header-bg: rgba(10, 12, 18, 0.88);
+		--header-text: rgba(255, 255, 255, 0.92);
+
+		/* 링크/포인트는 취향대로 */
+		--accent: #8aa2ff;
+		--accent-dark: #5874ff;
 	}
 }
 
-/* =========================
-   🌙 Manual Dark Mode (toggle)
-   - Overrides system when set
-   ========================= */
-:root[data-theme="dark"] {
-	--accent: #9bbcff;
-	--accent-dark: #5f7cff;
+/* ✅ 수동 토글(강제 다크/라이트) - JS가 html[data-theme] 바꿈 */
+html[data-theme="dark"] {
+	--bg-main: #0b0e14;
+	--bg-grad-top: rgba(18, 22, 32, 0.9);
+	--bg-grad-bottom: #0b0e14;
 
-	--gray-light: 40, 44, 60;
-	--gray-dark: 220, 224, 240;
-	--gray-gradient: rgba(18, 20, 28, 90%), rgba(14, 14, 17, 100%);
+	--text-main: rgba(235, 240, 255, 0.86);
+	--text-strong: rgba(255, 255, 255, 0.92);
 
-	--bg-main: #0e0e11;
-	--text-main: #e6e8ef;
-	--heading-color: #f2f4ff;
-	--code-bg: #1e2230;
+	--card-bg: rgba(20, 24, 34, 0.65);
+	--border-subtle: rgba(255, 255, 255, 0.10);
 
-	--box-shadow:
-		0 2px 10px rgba(0, 0, 0, 35%),
-		0 10px 28px rgba(0, 0, 0, 40%),
-		0 18px 40px rgba(0, 0, 0, 45%);
+	--code-bg: rgba(255, 255, 255, 0.08);
+
+	--header-bg: rgba(10, 12, 18, 0.88);
+	--header-text: rgba(255, 255, 255, 0.92);
+
+	--accent: #8aa2ff;
+	--accent-dark: #5874ff;
 }
 
-/* Optional: manual Light mode (if you later want a ☀️ forced mode)
-:root[data-theme="light"] {
+html[data-theme="light"] {
+	--bg-main: #ffffff;
+	--bg-grad-top: rgba(var(--gray-light), 50%);
+	--bg-grad-bottom: #ffffff;
+
+	--text-main: rgb(var(--gray-dark));
+	--text-strong: rgb(var(--black));
+
+	--card-bg: rgba(255, 255, 255, 0.6);
+	--border-subtle: rgba(0, 0, 0, 0.08);
+
+	--code-bg: rgb(var(--gray-light));
+
+	--header-bg: rgba(255, 255, 255, 0.85);
+	--header-text: rgb(var(--black));
 }
-*/
 
 @font-face {
 	font-family: "Atkinson";
@@ -98,22 +121,24 @@
 	font-display: swap;
 }
 
+/* =========================
+   Base
+   ========================= */
+
 body {
 	font-family: "Atkinson", sans-serif;
 	margin: 0;
 	padding: 0;
 	text-align: left;
 
-	/* ✅ was: linear-gradient(var(--gray-gradient)) */
-	background: var(--bg-main);
+	/* ✅ 테마 기반 배경 */
+	background: linear-gradient(var(--bg-grad-top), var(--bg-grad-bottom)) no-repeat;
 	background-size: 100% 600px;
 
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 
-	/* ✅ was: rgb(var(--gray-dark)) */
 	color: var(--text-main);
-
 	font-size: 20px;
 	line-height: 1.7;
 }
@@ -132,10 +157,7 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.5rem 0;
-
-	/* ✅ was: rgb(var(--black)) */
-	color: var(--heading-color);
-
+	color: var(--text-strong);
 	line-height: 1.2;
 }
 
@@ -194,18 +216,16 @@ img {
 
 code {
 	padding: 2px 5px;
-
-	/* ✅ was: rgb(var(--gray-light)) */
 	background-color: var(--code-bg);
-
 	border-radius: 2px;
 }
 
 pre {
 	padding: 1.5em;
 	border-radius: 8px;
+	background: var(--code-bg);
+	border: 1px solid var(--border-subtle);
 }
-
 pre > code {
 	all: unset;
 }
@@ -219,7 +239,7 @@ blockquote {
 
 hr {
 	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
+	border-top: 1px solid var(--border-subtle);
 }
 
 @media (max-width: 720px) {
@@ -231,6 +251,9 @@ hr {
 	}
 }
 
+/* =========================
+   Accessibility helper
+   ========================= */
 .sr-only {
 	border: 0;
 	padding: 0;
@@ -246,19 +269,64 @@ hr {
 }
 
 /* =========================
-   🌙 Theme Toggle Button Style
-   (You can place button in Header.astro)
+   ✅ Header/Nav: mobile white fix + sticky + dark friendly
    ========================= */
-#theme-toggle {
-	background: none;
-	border: none;
+header,
+nav {
+	background-color: var(--header-bg);
+	color: var(--header-text);
+	backdrop-filter: saturate(1.2) blur(8px);
+	-webkit-backdrop-filter: saturate(1.2) blur(8px);
+}
+
+header {
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	border-bottom: 1px solid var(--border-subtle);
+}
+
+/* =========================
+   ✅ Theme toggle button style
+   ========================= */
+.theme-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4rem;
+
+	padding: 0.45rem 0.65rem;
+	border-radius: 10px;
+
+	border: 1px solid var(--border-subtle);
+	background: var(--card-bg);
+	color: var(--header-text);
+
 	cursor: pointer;
-	font-size: 1.2rem;
-	color: var(--accent);
-	padding: 0.3em 0.5em;
+	user-select: none;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.theme-toggle:hover {
+	transform: translateY(-1px);
+}
+
+.theme-toggle:active {
+	transform: translateY(0);
+}
+
+.theme-toggle__icon {
+	font-size: 1.05rem;
 	line-height: 1;
 }
 
-#theme-toggle:hover {
-	opacity: 0.85;
+.theme-toggle__text {
+	font-size: 0.9rem;
+}
+
+/* 모바일에서 텍스트 숨기고 아이콘만 */
+@media (max-width: 720px) {
+	.theme-toggle__text {
+		display: none;
+	}
 }
