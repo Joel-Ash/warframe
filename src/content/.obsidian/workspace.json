@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "guide/micro-tips/숙련도-2탄.md",
+                "file": "guide/micro-tips/모드수용량.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "숙련도-2탄"
+              "title": "모드수용량"
             }
           }
         ]
@@ -182,8 +182,9 @@
   },
   "active": "87675cc0374d0641",
   "lastOpenFiles": [
-    "guide/missions/중재-강철의-길.md",
     "guide/micro-tips/숙련도-2탄.md",
+    "guide/micro-tips/모드수용량.md",
+    "guide/missions/중재-강철의-길.md",
     "여기 참고.md",
     "2026-01-10.md",
     "guide/micro-tips/숙련도-1탄.md",
