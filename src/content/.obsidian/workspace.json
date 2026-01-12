@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "98ce4a21708c66a3",
+        "id": "1e3ed64f2445e0bc",
         "type": "tabs",
         "children": [
           {
-            "id": "da3e06fe8c7703e4",
+            "id": "2f4768d0208c0b93",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -180,11 +180,11 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "da3e06fe8c7703e4",
+  "active": "2f4768d0208c0b93",
   "lastOpenFiles": [
+    "guide/basics/피해량.md",
     "guide/basics/치명타.md",
     "guide/basics/멀티샷.md",
-    "guide/basics/피해량.md",
     "guide/micro-tips/모드수용량.md",
     "guide/missions/페리타-반란.md",
     "guide/missions/디센디아.md",
