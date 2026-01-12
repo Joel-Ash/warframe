@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "1e3ed64f2445e0bc",
+        "id": "f1c879bdce11058e",
         "type": "tabs",
         "children": [
           {
-            "id": "2f4768d0208c0b93",
+            "id": "c4d7367d48010fad",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "guide/basics/피해량.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "피해량"
+              "title": "새 탭"
             }
           }
         ]
@@ -180,8 +176,10 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "2f4768d0208c0b93",
+  "active": "c4d7367d48010fad",
   "lastOpenFiles": [
+    "guide/upgrades/인카논-주차별-정리.md",
+    "guide/upgrades/석비파밍.md",
     "guide/basics/피해량.md",
     "guide/basics/치명타.md",
     "guide/basics/멀티샷.md",
@@ -206,10 +204,8 @@
     "guide/micro-tips/속성피해 조합.md",
     "guide/micro-tips/포르마.md",
     "guide/micro-tips/숙련도-2탄.md",
-    "guide/upgrades/석비파밍.md",
     "moding/warframes/무제.md",
     "main/warframe-메인-퀘스트.md",
-    "여기 참고.md",
     "guide/images/critical-damage-scaling-table.png",
     "guide/images/primed-target-cracker.png",
     "guide/images/스크린샷 2026-01-11 200027.png",
