@@ -9,7 +9,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 // ✅ guide 컬렉션 글 불러오기
 const posts = (await getCollection('guide')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  (a, b) => a.data.title.localeCompare(b.data.title, 'ko')
 );
 
 // ✅ "파트(폴더)" 기준으로 그룹핑

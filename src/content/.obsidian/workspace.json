@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "510bb9b5c9a95000",
+        "id": "98ce4a21708c66a3",
         "type": "tabs",
         "children": [
           {
-            "id": "87675cc0374d0641",
+            "id": "da3e06fe8c7703e4",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "guide/micro-tips/속성피해 조합.md",
+                "file": "guide/missions/페리타-반란.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "속성피해 조합"
+              "title": "페리타-반란"
             }
           }
         ]
@@ -41,7 +41,7 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": true
               },
               "icon": "lucide-folder-closed",
               "title": "파일 탐색기"
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300.5
   },
   "right": {
     "id": "7a9f534a02515321",
@@ -180,29 +180,41 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "87675cc0374d0641",
+  "active": "da3e06fe8c7703e4",
   "lastOpenFiles": [
-    "guide/micro-tips/포르마.md",
-    "guide/micro-tips/속성피해 조합.md",
-    "guide/micro-tips/숙련도-2탄.md",
-    "guide/micro-tips/모드수용량.md",
+    "guide/missions/디센디아.md",
+    "guide/missions/페리타-반란.md",
+    "guide/missions/아이돌론-레이드.md",
     "guide/missions/중재-강철의-길.md",
-    "여기 참고.md",
-    "2026-01-10.md",
+    "moding/weapons/란카-아이돌론.md",
+    "moding/warframes/네크로스-농부.md",
+    "moding/weapons/나타루크-아이돌론.md",
+    "moding/weapons/페리게일-아이돌론.md",
+    "moding/weapons/루비코-프라임-아이돌론.md",
+    "moding/warframes/단테-아이돌론.md",
+    "moding/warframes/해로우-아이돌론.md",
+    "moding/warframes/크로마-아이돌론.md",
+    "moding/warframes/트리티니-아이돌론.md",
+    "moding/warframes/볼트-아이돌론.md",
+    "무제",
+    "무제.base",
     "guide/micro-tips/숙련도-1탄.md",
-    "moding/warframes/네크로스-[농부].md",
-    "main/warframe-메인-퀘스트.md",
+    "guide/micro-tips/속성피해 조합.md",
+    "guide/micro-tips/포르마.md",
+    "guide/micro-tips/숙련도-2탄.md",
+    "guide/upgrades/석비파밍.md",
+    "moding/warframes/무제.md",
     "guide/basics/치명타.md",
     "guide/basics/멀티샷.md",
-    "guide/basics/무제.md",
-    "guide/basics/치명타 유형.md",
+    "main/warframe-메인-퀘스트.md",
+    "guide/micro-tips/모드수용량.md",
+    "여기 참고.md",
+    "2026-01-10.md",
     "guide/images/critical-damage-scaling-table.png",
     "guide/images/primed-target-cracker.png",
     "guide/images/스크린샷 2026-01-11 200027.png",
     "guide/images/스크린샷 2026-01-11 195813.png",
     "guide/images",
-    "main/warframe 메인 퀘스트.md",
-    "moding/warframes/네크로스 [농부].md",
     "moding/images",
     "moding/새 폴더"
   ]
