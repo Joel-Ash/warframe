@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "guide/missions/페리타-반란.md",
+                "file": "guide/basics/피해량.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "페리타-반란"
+              "title": "피해량"
             }
           }
         ]
@@ -182,8 +182,12 @@
   },
   "active": "da3e06fe8c7703e4",
   "lastOpenFiles": [
-    "guide/missions/디센디아.md",
+    "guide/basics/치명타.md",
+    "guide/basics/멀티샷.md",
+    "guide/basics/피해량.md",
+    "guide/micro-tips/모드수용량.md",
     "guide/missions/페리타-반란.md",
+    "guide/missions/디센디아.md",
     "guide/missions/아이돌론-레이드.md",
     "guide/missions/중재-강철의-길.md",
     "moding/weapons/란카-아이돌론.md",
@@ -204,12 +208,8 @@
     "guide/micro-tips/숙련도-2탄.md",
     "guide/upgrades/석비파밍.md",
     "moding/warframes/무제.md",
-    "guide/basics/치명타.md",
-    "guide/basics/멀티샷.md",
     "main/warframe-메인-퀘스트.md",
-    "guide/micro-tips/모드수용량.md",
     "여기 참고.md",
-    "2026-01-10.md",
     "guide/images/critical-damage-scaling-table.png",
     "guide/images/primed-target-cracker.png",
     "guide/images/스크린샷 2026-01-11 200027.png",
