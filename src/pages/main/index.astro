@@ -34,7 +34,7 @@ const posts = (await getCollection('main')).sort(
         font-size: 1.21rem;
         font-weight: 700;
         line-height: 1.65;
-        color: rgba(180, 200, 255, 0.85); /* ⭐ 1번 안: 연한 블루 */
+        color: rgba(180, 200, 255, 0.85);
       }
 
       ul {
@@ -127,7 +127,6 @@ const posts = (await getCollection('main')).sort(
     <Header />
 
     <main>
-      <!-- ✅ 탭 상단 안내 문구 -->
       <section class="tab-notice">
         <p>
           본 문서는 가독성과 전달력을 우선하여 구어체 및 반말 표현을 사용하고 있습니다.
@@ -137,7 +136,6 @@ const posts = (await getCollection('main')).sort(
         </p>
       </section>
 
-      <!-- ✅ 메인 글 목록 -->
       <section>
         <ul>
           {posts.map((post) => (

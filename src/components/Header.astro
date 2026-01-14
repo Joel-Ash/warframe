@@ -118,7 +118,7 @@ import HeaderLink from "./HeaderLink.astro";
       window.__astroStateKeeperInstalled = true;
 
       // =========================================================
-      // 0) 탭 이동 감지 → 이전 페이지 details 상태 리셋 (버그 픽스)
+      // 0) 탭 이동 감지 → 이전 페이지 details 상태 리셋
       // =========================================================
       const TAB_KEY = "current-tab";
       const PATH_KEY = "last-path";
@@ -142,7 +142,7 @@ import HeaderLink from "./HeaderLink.astro";
       sessionStorage.setItem(PATH_KEY, location.pathname);
 
       // =========================================================
-      // 1) 탭 클릭 이동 시: 스크롤 복원 무시하고 무조건 최상단
+      // 1) 탭 클릭 이동 시: (모바일 포함) 다음 페이지는 무조건 최상단
       // =========================================================
       const FORCE_TOP_KEY = "force-top-next-path";
 
@@ -163,26 +163,31 @@ import HeaderLink from "./HeaderLink.astro";
         pathname.startsWith("/guide") ||
         pathname.startsWith("/moding");
 
-      document.addEventListener(
-        "click",
-        (e) => {
-          const a = e.target.closest && e.target.closest('a[href]');
-          if (!a) return;
+      const markForceTopForPath = (nextPath) => {
+        sessionStorage.setItem(FORCE_TOP_KEY, nextPath);
+        sessionStorage.removeItem("scroll:" + nextPath);
+      };
 
-          const href = a.getAttribute("href");
-          if (!href) return;
+      const markForceTopIfTab = (e) => {
+        const a = e.target?.closest && e.target.closest("a[href]");
+        if (!a) return;
 
-          if (a.target === "_blank" || a.hasAttribute("download")) return;
-          if (/^mailto:/i.test(href) || /^tel:/i.test(href)) return;
+        const href = a.getAttribute("href");
+        if (!href) return;
 
-          const nextPath = normPath(href);
-          if (!isTabHref(nextPath)) return;
+        if (a.target === "_blank" || a.hasAttribute("download")) return;
+        if (/^mailto:/i.test(href) || /^tel:/i.test(href)) return;
 
-          sessionStorage.setItem(FORCE_TOP_KEY, nextPath);
-          sessionStorage.removeItem("scroll:" + nextPath);
-        },
-        true
-      );
+        const nextPath = normPath(href);
+        if (!isTabHref(nextPath)) return;
+
+        markForceTopForPath(nextPath);
+      };
+
+      // ✅ 모바일: click보다 먼저 잡는다
+      document.addEventListener("pointerdown", markForceTopIfTab, true);
+      // ✅ 데스크탑/키보드 접근성용
+      document.addEventListener("click", markForceTopIfTab, true);
 
       // =========================================================
       // 2) 스크롤 기억/복원 (탭 이동 시는 최상단 강제)
@@ -218,11 +223,108 @@ import HeaderLink from "./HeaderLink.astro";
       window.addEventListener("beforeunload", saveScroll);
 
       // =========================================================
-      // 3) 아코디언 애니메이션 (grid-template-rows: 0fr ↔ 1fr)
-      //    ✅ 닫힘 애니메이션이 사라지던 원인(open=false 즉시)을 수정
+      // 3) 모바일 제스처(스와이프)로 탭 이동
+      //    - 좌/우 스와이프로: main <-> guide <-> moding
+      //    - 세로 스크롤 중엔 작동 안 함
+      //    - 입력/링크/버튼/summary 위에서 시작하면 작동 안 함
+      // =========================================================
+      const TAB_ORDER = ["/main", "/guide", "/moding"];
+
+      const currentTabRoot = (() => {
+        if (location.pathname.startsWith("/guide")) return "/guide";
+        if (location.pathname.startsWith("/moding")) return "/moding";
+        return "/main";
+      })();
+
+      const getAdjacentTab = (dir) => {
+        const i = TAB_ORDER.indexOf(currentTabRoot);
+        if (i === -1) return null;
+        const ni = i + dir;
+        if (ni < 0 || ni >= TAB_ORDER.length) return null;
+        return TAB_ORDER[ni];
+      };
+
+      const isTouchLike = () =>
+        "ontouchstart" in window ||
+        (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
+        window.matchMedia?.("(pointer: coarse)")?.matches;
+
+      const shouldIgnoreGestureStart = (target) => {
+        if (!target) return true;
+        const el = target.closest
+          ? target.closest("a, button, input, textarea, select, summary, [role='button']")
+          : null;
+        return !!el;
+      };
+
+      const SWIPE_MIN_X = 64;
+      const SWIPE_MAX_Y = 36;
+      const SWIPE_MIN_VX = 0.12;
+
+      if (isTouchLike()) {
+        let sx = 0, sy = 0, st = 0;
+        let tracking = false;
+        let locked = false;
+
+        const onPointerDown = (e) => {
+          if (locked) return;
+          if (e.pointerType && e.pointerType !== "touch" && e.pointerType !== "pen") return;
+          if (shouldIgnoreGestureStart(e.target)) return;
+          if (e.isPrimary === false) return;
+
+          tracking = true;
+          sx = e.clientX;
+          sy = e.clientY;
+          st = performance.now();
+        };
+
+        const onPointerMove = (e) => {
+          if (!tracking || locked) return;
+
+          const dx = e.clientX - sx;
+          const dy = e.clientY - sy;
+
+          if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > SWIPE_MAX_Y) {
+            tracking = false;
+          }
+        };
+
+        const onPointerUp = (e) => {
+          if (!tracking || locked) return;
+          tracking = false;
+
+          const dx = e.clientX - sx;
+          const dy = e.clientY - sy;
+          const dt = Math.max(1, performance.now() - st);
+          const vx = Math.abs(dx) / dt;
+
+          if (Math.abs(dx) < SWIPE_MIN_X) return;
+          if (Math.abs(dy) > SWIPE_MAX_Y) return;
+          if (vx < SWIPE_MIN_VX) return;
+
+          const dir = dx < 0 ? +1 : -1;
+          const next = getAdjacentTab(dir);
+          if (!next) return;
+
+          locked = true;
+
+          markForceTopForPath(next);
+          location.assign(next);
+        };
+
+        document.addEventListener("pointerdown", onPointerDown, true);
+        document.addEventListener("pointermove", onPointerMove, true);
+        document.addEventListener("pointerup", onPointerUp, true);
+        document.addEventListener("pointercancel", () => { tracking = false; }, true);
+      }
+
+      // =========================================================
+      // 4) 아코디언 애니메이션 (grid-template-rows: 0fr ↔ 1fr)
+      //    ✅ 닫힘 애니메이션: 끝난 뒤 open=false
+      //    ✅ "동시" 동작: A 닫히면서 B 바로 열리기
       // =========================================================
       const detailsKey = () => "details:" + location.pathname;
-      const DSEL = 'details[data-part]';
+      const DSEL = "details[data-part]";
 
       const allDetails = () => Array.from(document.querySelectorAll(DSEL));
       const bodyOf = (d) => d.querySelector(".accordion-body");
@@ -268,7 +370,6 @@ import HeaderLink from "./HeaderLink.astro";
         });
       };
 
-      // ✅ animateTo: Promise로 "애니메이션 끝"을 알려줌
       const animateTo = (d, toOpen) => {
         const body = bodyOf(d);
         const inner = innerOf(d);
@@ -284,11 +385,9 @@ import HeaderLink from "./HeaderLink.astro";
         const ms = toOpen ? OPEN_MS : CLOSE_MS;
         const ease = toOpen ? EASE_OPEN : EASE_CLOSE;
 
-        // body(grid)는 transition
         body.style.transition = `grid-template-rows ${ms}ms ${ease}`;
         body.style.gridTemplateRows = toOpen ? "1fr" : "0fr";
 
-        // inner는 WAAPI
         const anim = inner.animate(
           toOpen
             ? [
@@ -302,12 +401,15 @@ import HeaderLink from "./HeaderLink.astro";
           { duration: ms, easing: ease, fill: "both" }
         );
 
-        // ✅ body transitionend를 기다렸다가 resolve
         let done = false;
+        let resolvePromise;
+        const p = new Promise((res) => (resolvePromise = res));
+
         const finish = () => {
           if (done) return;
           done = true;
 
+          window.clearTimeout(t);
           body.removeEventListener("transitionend", onBodyEnd);
 
           body.style.transition = "";
@@ -331,12 +433,7 @@ import HeaderLink from "./HeaderLink.astro";
         };
 
         body.addEventListener("transitionend", onBodyEnd);
-
-        // fallback(혹시 transitionend 누락될 때)
-        const t = window.setTimeout(() => finish(), ms + 60);
-
-        let resolvePromise;
-        const p = new Promise((res) => (resolvePromise = res));
+        const t = window.setTimeout(() => finish(), ms + 80);
 
         running.set(d, {
           cleanup: () => {
@@ -346,9 +443,7 @@ import HeaderLink from "./HeaderLink.astro";
           },
         });
 
-        // inner 쪽 finished가 먼저 끝나도 body가 끝날 때까지 기다림
         anim.finished.catch(() => {});
-
         return p;
       };
 
@@ -365,12 +460,11 @@ import HeaderLink from "./HeaderLink.astro";
         else sessionStorage.setItem(detailsKey(), JSON.stringify(opened));
       };
 
-      // ✅ 다른 애들 닫을 때도 open=false를 "나중에"
-      const closeOthers = async (current) => {
+      // ✅ 동시 닫기: Promise 배열 반환 (await 안 함)
+      const closeOthersConcurrent = (current) => {
         const tasks = [];
         for (const d of allDetails()) {
           if (d !== current && d.open) {
-            // 여기서 open을 바로 false로 하지 말 것!
             tasks.push(
               animateTo(d, false).then(() => {
                 d.open = false;
@@ -378,7 +472,7 @@ import HeaderLink from "./HeaderLink.astro";
             );
           }
         }
-        await Promise.all(tasks);
+        return tasks;
       };
 
       const isBackForwardNav = (pageshowEvent) => {
@@ -429,7 +523,6 @@ import HeaderLink from "./HeaderLink.astro";
 
       window.addEventListener("pageshow", restoreDetails);
 
-      // summary 클릭 핸들링
       document.addEventListener(
         "click",
         async (e) => {
@@ -449,18 +542,22 @@ import HeaderLink from "./HeaderLink.astro";
             return;
           }
 
+          // 닫기(단독)
           if (details.open) {
-            // ✅ 닫기: details는 열린 채로 애니메이션 → 끝난 다음 open=false
             await animateTo(details, false);
             details.open = false;
             saveDetails();
             return;
           }
 
-          // 열기 (아코디언: 다른 것 닫기)
-          await closeOthers(details);
+          // ✅ 열기(동시): 다른거 닫으면서 동시에 열기
+          const closeTasks = closeOthersConcurrent(details);
+
           details.open = true;
-          await animateTo(details, true);
+          const openTask = animateTo(details, true);
+
+          await Promise.all([...closeTasks, openTask]);
+
           saveDetails();
         },
         true

@@ -7,28 +7,23 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
-// ✅ moding 컬렉션 글 불러오기
 const posts = (await getCollection('moding')).sort(
   (a, b) => a.data.title.localeCompare(b.data.title, 'ko')
 );
 
-// ✅ "파트(폴더)" 기준으로 그룹핑
 function getPartFromId(id: string) {
   const normalized = id.replaceAll('\\', '/');
   return normalized.split('/')[0] || 'etc';
 }
 
-// ✅ 폴더명 -> 화면 표시명
 const PART_LABELS: Record<string, string> = {
   'warframes': '워프레임',
   'weapons': '무기',
   'companions': '동반자',
 };
 
-// ✅ 표시 순서 고정
 const PART_ORDER = ['warframes', 'weapons', 'companions'];
 
-// ✅ 그룹 생성
 const grouped = new Map<string, typeof posts>();
 for (const post of posts) {
   const part = getPartFromId(post.id);
@@ -36,7 +31,6 @@ for (const post of posts) {
   grouped.get(part)!.push(post);
 }
 
-// ✅ 그룹 정렬
 const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
   const ia = PART_ORDER.indexOf(a);
   const ib = PART_ORDER.indexOf(b);
@@ -51,9 +45,9 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
     <style>
       main {
         width: 960px;
+        margin: 0 auto;
       }
 
-      /* 🔹 모딩 탭 안내 문구 */
       .moding-notice {
         margin: 3.5rem auto 4.5rem;
         max-width: 820px;
@@ -184,6 +178,7 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
       @media (max-width: 720px) {
         main {
           width: 100%;
+          padding: 0 1rem;
         }
         .moding-notice p {
           font-size: 0.95rem;
@@ -228,7 +223,6 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
                 <span class="count">{list.length}개</span>
               </summary>
 
-              {/* ✅ 여기부터가 추가/변경 포인트 */}
               <div class="accordion-body">
                 <div class="accordion-inner">
                   <ul>
@@ -248,7 +242,6 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
                   </ul>
                 </div>
               </div>
-              {/* ✅ 여기까지 */}
             </details>
           </section>
         );
