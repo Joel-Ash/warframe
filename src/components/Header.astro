@@ -223,178 +223,7 @@ import HeaderLink from "./HeaderLink.astro";
       window.addEventListener("beforeunload", saveScroll);
 
       // =========================================================
-      // 3) 모바일 제스처(스와이프)로 탭 이동 (✅ 페이지 어디서든)
-      //    - 좌/우 스와이프로: main <-> guide <-> moding
-      //    - summary(폴더바) 위에서 시작해도 허용 (핵심)
-      //    - 스와이프 확정되면 "다음 click 1회" 캡처해서 링크/summary 클릭 방지
-      //    - pointer 이벤트 + touch 폴백
-      // =========================================================
-      const TAB_ORDER = ["/main", "/guide", "/moding"];
-
-      const currentTabRoot = (() => {
-        if (location.pathname.startsWith("/guide")) return "/guide";
-        if (location.pathname.startsWith("/moding")) return "/moding";
-        return "/main";
-      })();
-
-      const getAdjacentTab = (dir) => {
-        const i = TAB_ORDER.indexOf(currentTabRoot);
-        if (i === -1) return null;
-        const ni = i + dir;
-        if (ni < 0 || ni >= TAB_ORDER.length) return null;
-        return TAB_ORDER[ni];
-      };
-
-      const isTouchLike = () =>
-        ("ontouchstart" in window) ||
-        (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
-        window.matchMedia?.("(pointer: coarse)")?.matches;
-
-      // ✅ 입력 폼만 제외: a/summary/카드 위에서도 스와이프 가능
-      const shouldIgnoreGestureStart = (target) => {
-        if (!target) return true;
-        const el = target.closest ? target.closest("input, textarea, select") : null;
-        return !!el;
-      };
-
-      const SWIPE_MIN_X = 72;
-      const SWIPE_MAX_Y = 44;
-      const SWIPE_MIN_VX = 0.10;
-
-      // 스와이프 확정 이후, 다음 click 1회 차단
-      let blockNextClickOnce = false;
-      const blockClickCapture = (e) => {
-        if (!blockNextClickOnce) return;
-        blockNextClickOnce = false;
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-      };
-      document.addEventListener("click", blockClickCapture, true);
-
-      const doSwipeNav = (dir) => {
-        const next = getAdjacentTab(dir);
-        if (!next) return false;
-
-        markForceTopForPath(next);
-        blockNextClickOnce = true;
-        location.assign(next);
-        return true;
-      };
-
-      // pointer 기반
-      if (isTouchLike() && "PointerEvent" in window) {
-        let sx = 0, sy = 0, st = 0;
-        let tracking = false;
-        let locked = false;
-
-        const onPointerDown = (e) => {
-          if (locked) return;
-          if (e.pointerType && e.pointerType !== "touch" && e.pointerType !== "pen") return;
-          if (shouldIgnoreGestureStart(e.target)) return;
-          if (e.isPrimary === false) return;
-
-          tracking = true;
-          sx = e.clientX;
-          sy = e.clientY;
-          st = performance.now();
-        };
-
-        const onPointerMove = (e) => {
-          if (!tracking || locked) return;
-
-          const dx = e.clientX - sx;
-          const dy = e.clientY - sy;
-
-          // 세로 스크롤 의도가 확실하면 포기
-          if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > SWIPE_MAX_Y) {
-            tracking = false;
-          }
-        };
-
-        const onPointerUp = (e) => {
-          if (!tracking || locked) return;
-          tracking = false;
-
-          const dx = e.clientX - sx;
-          const dy = e.clientY - sy;
-          const dt = Math.max(1, performance.now() - st);
-          const vx = Math.abs(dx) / dt;
-
-          if (Math.abs(dx) < SWIPE_MIN_X) return;
-          if (Math.abs(dy) > SWIPE_MAX_Y) return;
-          if (vx < SWIPE_MIN_VX) return;
-
-          const dir = dx < 0 ? +1 : -1;
-
-          locked = true;
-          if (!doSwipeNav(dir)) locked = false;
-        };
-
-        document.addEventListener("pointerdown", onPointerDown, true);
-        document.addEventListener("pointermove", onPointerMove, true);
-        document.addEventListener("pointerup", onPointerUp, true);
-        document.addEventListener("pointercancel", () => { tracking = false; }, true);
-      }
-      // touch 폴백
-      else if (isTouchLike()) {
-        let sx = 0, sy = 0, st = 0;
-        let tracking = false;
-        let locked = false;
-
-        const onTouchStart = (e) => {
-          if (locked) return;
-          if (!e.touches || e.touches.length !== 1) return;
-          if (shouldIgnoreGestureStart(e.target)) return;
-
-          const t = e.touches[0];
-          tracking = true;
-          sx = t.clientX;
-          sy = t.clientY;
-          st = performance.now();
-        };
-
-        const onTouchMove = (e) => {
-          if (!tracking || locked) return;
-          const t = e.touches[0];
-          const dx = t.clientX - sx;
-          const dy = t.clientY - sy;
-
-          if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > SWIPE_MAX_Y) {
-            tracking = false;
-          }
-        };
-
-        const onTouchEnd = (e) => {
-          if (!tracking || locked) return;
-          tracking = false;
-
-          const t = (e.changedTouches && e.changedTouches[0]) || null;
-          if (!t) return;
-
-          const dx = t.clientX - sx;
-          const dy = t.clientY - sy;
-          const dt = Math.max(1, performance.now() - st);
-          const vx = Math.abs(dx) / dt;
-
-          if (Math.abs(dx) < SWIPE_MIN_X) return;
-          if (Math.abs(dy) > SWIPE_MAX_Y) return;
-          if (vx < SWIPE_MIN_VX) return;
-
-          const dir = dx < 0 ? +1 : -1;
-
-          locked = true;
-          if (!doSwipeNav(dir)) locked = false;
-        };
-
-        document.addEventListener("touchstart", onTouchStart, { capture: true, passive: true });
-        document.addEventListener("touchmove", onTouchMove, { capture: true, passive: true });
-        document.addEventListener("touchend", onTouchEnd, { capture: true, passive: true });
-        document.addEventListener("touchcancel", () => { tracking = false; }, { capture: true, passive: true });
-      }
-
-      // =========================================================
-      // 4) 아코디언 애니메이션 (grid-template-rows: 0fr ↔ 1fr)
+      // 3) 아코디언 애니메이션 (grid-template-rows: 0fr ↔ 1fr)
       //    ✅ 닫힘 애니메이션: 끝난 뒤 open=false
       //    ✅ "동시" 동작: A 닫히면서 B 바로 열리기
       // =========================================================
@@ -616,6 +445,7 @@ import HeaderLink from "./HeaderLink.astro";
             return;
           }
 
+          // 닫기
           if (details.open) {
             await animateTo(details, false);
             details.open = false;
@@ -623,6 +453,7 @@ import HeaderLink from "./HeaderLink.astro";
             return;
           }
 
+          // 열기(동시): 다른 폴더 닫히는 동안 현재 폴더도 같이 열림
           const closeTasks = closeOthersConcurrent(details);
 
           details.open = true;
