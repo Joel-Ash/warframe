@@ -12,47 +12,58 @@ import HeaderLink from "./HeaderLink.astro";
       <HeaderLink href="/guide">가이드</HeaderLink>
       <HeaderLink href="/moding">모딩</HeaderLink>
     </div>
+
+    <div class="right-slot" aria-hidden="true"></div>
   </nav>
 </header>
 
 <style>
-  /* ===== Header 기본(라이트) ===== */
   header {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+
     margin: 0;
     padding: 0 1em;
     background: #ffffff;
     box-shadow: 0 2px 8px rgba(var(--black), 0.05);
   }
 
+  /* ✅ 3컬럼(좌/중/우)로 탭 위치 완전 고정 */
   nav {
-    position: relative;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: flex-start; /* 로고 왼쪽 */
     min-height: 56px;
   }
 
   h2 {
     margin: 0;
     font-size: 1em;
+    justify-self: start;
+    min-width: 0;
   }
 
   h2 a {
     text-decoration: none;
     color: rgb(var(--gray-dark));
     font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
   }
 
   .internal-links {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    justify-self: center;
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  /* HeaderLink가 결국 <a>를 렌더링하니까 nav a로 잡으면 됨 */
+  .right-slot {
+    justify-self: end;
+  }
+
   nav a {
     display: flex;
     align-items: center;
@@ -62,43 +73,405 @@ import HeaderLink from "./HeaderLink.astro";
     text-decoration: none;
 
     color: rgb(var(--gray-dark));
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.02em;
+    white-space: nowrap;
   }
 
   nav a.active {
     border-bottom-color: var(--accent);
     color: var(--accent);
-    font-weight: 800;
+    font-weight: inherit;
   }
 
-  /* ===== 모바일(기존 동작 유지: 가운데 -> 오른쪽) ===== */
   @media (max-width: 720px) {
-    .internal-links {
-      position: static;
-      transform: none;
-      margin-left: auto;
+    header {
+      padding: 0 0.75em;
+    }
+    nav a {
+      padding: 0 0.7rem;
     }
   }
 
-  /* ===== 다크모드에서 헤더만 다크로 ===== */
   @media (prefers-color-scheme: dark) {
     header {
-      background: #111318; /* 헤더 바탕 */
+      background: #111318;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
     }
-
     h2 a {
       color: rgba(255, 255, 255, 0.9);
     }
-
     nav a {
       color: rgba(255, 255, 255, 0.7);
     }
-
     nav a.active {
       color: var(--accent);
       border-bottom-color: var(--accent);
     }
   }
 </style>
+
+<script is:inline>
+  (() => {
+    try {
+      if (window.__astroStateKeeperInstalled) return;
+      window.__astroStateKeeperInstalled = true;
+
+      // =========================================================
+      // 0) 탭 이동 감지 → 이전 페이지 details 상태 리셋 (버그 픽스)
+      // =========================================================
+      const TAB_KEY = "current-tab";
+      const PATH_KEY = "last-path";
+
+      const getTab = (path) => {
+        if (path.startsWith("/guide")) return "guide";
+        if (path.startsWith("/moding")) return "moding";
+        if (path.startsWith("/main")) return "main";
+        return "other";
+      };
+
+      const prevTab = sessionStorage.getItem(TAB_KEY);
+      const prevPath = sessionStorage.getItem(PATH_KEY);
+      const currentTab = getTab(location.pathname);
+
+      if (prevTab && prevTab !== currentTab && prevPath) {
+        sessionStorage.removeItem("details:" + prevPath);
+      }
+
+      sessionStorage.setItem(TAB_KEY, currentTab);
+      sessionStorage.setItem(PATH_KEY, location.pathname);
+
+      // =========================================================
+      // 1) 탭 클릭 이동 시: 스크롤 복원 무시하고 무조건 최상단
+      // =========================================================
+      const FORCE_TOP_KEY = "force-top-next-path";
+
+      const normPath = (href) => {
+        try {
+          const u = new URL(href, location.origin);
+          return u.pathname;
+        } catch (_) {
+          return String(href).split("#")[0].split("?")[0];
+        }
+      };
+
+      const isTabHref = (pathname) =>
+        pathname === "/main" ||
+        pathname === "/guide" ||
+        pathname === "/moding" ||
+        pathname.startsWith("/main") ||
+        pathname.startsWith("/guide") ||
+        pathname.startsWith("/moding");
+
+      document.addEventListener(
+        "click",
+        (e) => {
+          const a = e.target.closest && e.target.closest('a[href]');
+          if (!a) return;
+
+          const href = a.getAttribute("href");
+          if (!href) return;
+
+          if (a.target === "_blank" || a.hasAttribute("download")) return;
+          if (/^mailto:/i.test(href) || /^tel:/i.test(href)) return;
+
+          const nextPath = normPath(href);
+          if (!isTabHref(nextPath)) return;
+
+          sessionStorage.setItem(FORCE_TOP_KEY, nextPath);
+          sessionStorage.removeItem("scroll:" + nextPath);
+        },
+        true
+      );
+
+      // =========================================================
+      // 2) 스크롤 기억/복원 (탭 이동 시는 최상단 강제)
+      // =========================================================
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+
+      const scrollKey = () => "scroll:" + location.pathname;
+
+      const restoreScroll = () => {
+        const forcePath = sessionStorage.getItem(FORCE_TOP_KEY);
+        if (forcePath === location.pathname) {
+          sessionStorage.removeItem(FORCE_TOP_KEY);
+          sessionStorage.removeItem(scrollKey());
+          requestAnimationFrame(() => window.scrollTo(0, 0));
+          return;
+        }
+
+        const saved = sessionStorage.getItem(scrollKey());
+        if (saved !== null) {
+          const y = Number(saved);
+          if (!Number.isNaN(y)) requestAnimationFrame(() => window.scrollTo(0, y));
+        }
+      };
+
+      const saveScroll = () => {
+        sessionStorage.setItem(scrollKey(), String(window.scrollY || 0));
+      };
+
+      window.addEventListener("pageshow", restoreScroll);
+      window.addEventListener("pagehide", saveScroll);
+      window.addEventListener("beforeunload", saveScroll);
+
+      // =========================================================
+      // 3) 아코디언 애니메이션 (grid-template-rows: 0fr ↔ 1fr)
+      //    ✅ 닫힘 애니메이션이 사라지던 원인(open=false 즉시)을 수정
+      // =========================================================
+      const detailsKey = () => "details:" + location.pathname;
+      const DSEL = 'details[data-part]';
+
+      const allDetails = () => Array.from(document.querySelectorAll(DSEL));
+      const bodyOf = (d) => d.querySelector(".accordion-body");
+      const innerOf = (d) => d.querySelector(".accordion-inner");
+
+      const OPEN_MS = 420;
+      const CLOSE_MS = 380;
+      const EASE_OPEN = "cubic-bezier(.12, 1.2, .25, 1)";
+      const EASE_CLOSE = "cubic-bezier(.22, .61, .36, 1)";
+
+      const running = new WeakMap();
+
+      const cleanup = (d) => {
+        const rec = running.get(d);
+        if (rec?.cleanup) rec.cleanup();
+        running.delete(d);
+      };
+
+      const applyInstantState = (d, open) => {
+        const body = bodyOf(d);
+        const inner = innerOf(d);
+        if (!body || !inner) return;
+
+        cleanup(d);
+
+        body.style.transition = "none";
+        inner.style.transition = "none";
+
+        body.style.display = "grid";
+        body.style.gridTemplateRows = open ? "1fr" : "0fr";
+        body.style.overflow = "hidden";
+
+        inner.style.minHeight = "0";
+        inner.style.opacity = open ? "1" : "0";
+        inner.style.transform = open
+          ? "translateY(0) scaleY(1)"
+          : "translateY(-6px) scaleY(.985)";
+        inner.style.transformOrigin = "top";
+
+        requestAnimationFrame(() => {
+          body.style.transition = "";
+          inner.style.transition = "";
+        });
+      };
+
+      // ✅ animateTo: Promise로 "애니메이션 끝"을 알려줌
+      const animateTo = (d, toOpen) => {
+        const body = bodyOf(d);
+        const inner = innerOf(d);
+        if (!body || !inner) return Promise.resolve();
+
+        cleanup(d);
+
+        body.style.display = "grid";
+        body.style.overflow = "hidden";
+        inner.style.minHeight = "0";
+        inner.style.transformOrigin = "top";
+
+        const ms = toOpen ? OPEN_MS : CLOSE_MS;
+        const ease = toOpen ? EASE_OPEN : EASE_CLOSE;
+
+        // body(grid)는 transition
+        body.style.transition = `grid-template-rows ${ms}ms ${ease}`;
+        body.style.gridTemplateRows = toOpen ? "1fr" : "0fr";
+
+        // inner는 WAAPI
+        const anim = inner.animate(
+          toOpen
+            ? [
+                { opacity: 0, transform: "translateY(-6px) scaleY(.985)" },
+                { opacity: 1, transform: "translateY(0) scaleY(1)" },
+              ]
+            : [
+                { opacity: 1, transform: "translateY(0) scaleY(1)" },
+                { opacity: 0, transform: "translateY(-6px) scaleY(.985)" },
+              ],
+          { duration: ms, easing: ease, fill: "both" }
+        );
+
+        // ✅ body transitionend를 기다렸다가 resolve
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+
+          body.removeEventListener("transitionend", onBodyEnd);
+
+          body.style.transition = "";
+          inner.style.transition = "";
+
+          if (toOpen) {
+            inner.style.opacity = "1";
+            inner.style.transform = "translateY(0) scaleY(1)";
+          } else {
+            inner.style.opacity = "0";
+            inner.style.transform = "translateY(-6px) scaleY(.985)";
+          }
+
+          cleanup(d);
+          resolvePromise();
+        };
+
+        const onBodyEnd = (e) => {
+          if (e.propertyName !== "grid-template-rows") return;
+          finish();
+        };
+
+        body.addEventListener("transitionend", onBodyEnd);
+
+        // fallback(혹시 transitionend 누락될 때)
+        const t = window.setTimeout(() => finish(), ms + 60);
+
+        let resolvePromise;
+        const p = new Promise((res) => (resolvePromise = res));
+
+        running.set(d, {
+          cleanup: () => {
+            window.clearTimeout(t);
+            body.removeEventListener("transitionend", onBodyEnd);
+            try { anim.cancel(); } catch (_) {}
+          },
+        });
+
+        // inner 쪽 finished가 먼저 끝나도 body가 끝날 때까지 기다림
+        anim.finished.catch(() => {});
+
+        return p;
+      };
+
+      const saveDetails = () => {
+        const all = allDetails();
+        if (all.length === 0) return;
+
+        const opened = all
+          .filter((d) => d.open)
+          .map((d) => d.getAttribute("data-part"))
+          .find(Boolean);
+
+        if (!opened) sessionStorage.removeItem(detailsKey());
+        else sessionStorage.setItem(detailsKey(), JSON.stringify(opened));
+      };
+
+      // ✅ 다른 애들 닫을 때도 open=false를 "나중에"
+      const closeOthers = async (current) => {
+        const tasks = [];
+        for (const d of allDetails()) {
+          if (d !== current && d.open) {
+            // 여기서 open을 바로 false로 하지 말 것!
+            tasks.push(
+              animateTo(d, false).then(() => {
+                d.open = false;
+              })
+            );
+          }
+        }
+        await Promise.all(tasks);
+      };
+
+      const isBackForwardNav = (pageshowEvent) => {
+        if (pageshowEvent && pageshowEvent.persisted) return true;
+        try {
+          const nav = performance.getEntriesByType("navigation")[0];
+          if (nav && nav.type === "back_forward") return true;
+        } catch (_) {}
+        return false;
+      };
+
+      const restoreDetails = (e) => {
+        const backForward = isBackForwardNav(e);
+
+        for (const d of allDetails()) {
+          const body = bodyOf(d);
+          const inner = innerOf(d);
+          if (!body || !inner) continue;
+          applyInstantState(d, d.open);
+        }
+
+        const raw = sessionStorage.getItem(detailsKey());
+        if (!raw) return;
+
+        let opened;
+        try {
+          opened = JSON.parse(raw);
+        } catch {
+          return;
+        }
+        if (typeof opened !== "string" || !opened) return;
+
+        const el = document.querySelector(`${DSEL}[data-part="${opened}"]`);
+        if (!el) return;
+
+        for (const d of allDetails()) {
+          if (d !== el && d.open) d.open = false;
+        }
+        el.open = true;
+
+        if (backForward) {
+          applyInstantState(el, true);
+          return;
+        }
+
+        requestAnimationFrame(() => animateTo(el, true));
+      };
+
+      window.addEventListener("pageshow", restoreDetails);
+
+      // summary 클릭 핸들링
+      document.addEventListener(
+        "click",
+        async (e) => {
+          const summary = e.target.closest("summary");
+          if (!summary) return;
+
+          const details = summary.closest(DSEL);
+          if (!details) return;
+
+          e.preventDefault();
+
+          const body = bodyOf(details);
+          const inner = innerOf(details);
+          if (!body || !inner) {
+            details.open = !details.open;
+            saveDetails();
+            return;
+          }
+
+          if (details.open) {
+            // ✅ 닫기: details는 열린 채로 애니메이션 → 끝난 다음 open=false
+            await animateTo(details, false);
+            details.open = false;
+            saveDetails();
+            return;
+          }
+
+          // 열기 (아코디언: 다른 것 닫기)
+          await closeOthers(details);
+          details.open = true;
+          await animateTo(details, true);
+          saveDetails();
+        },
+        true
+      );
+
+      window.addEventListener("pagehide", () => {
+        saveDetails();
+        for (const d of allDetails()) cleanup(d);
+      });
+
+      window.addEventListener("beforeunload", saveDetails);
+    } catch (e) {}
+  })();
+</script>

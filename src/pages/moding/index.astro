@@ -122,6 +122,14 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
         transform: rotate(45deg);
       }
 
+      .accordion-body {
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .accordion-inner {
+        min-height: 0;
+      }
+
       ul {
         display: flex;
         flex-wrap: wrap;
@@ -129,7 +137,6 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
         list-style-type: none;
         margin: 0;
         padding: 1rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
       }
 
       ul li {
@@ -195,16 +202,15 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
     <Header />
 
     <main>
-      <!-- 🔹 모딩 탭 설명 문구 -->
       <section class="moding-notice">
         <p>모딩에는 정답이 없습니다.</p>
         <p>
-		본 가이드는 작성자의 기준과 플레이 경험을 바탕으로<br />
-		인터넷에 공유된 다양한 모딩 자료를 참고하여 정리한 문서입니다.
+          본 가이드는 작성자의 기준과 플레이 경험을 바탕으로<br />
+          인터넷에 공유된 다양한 모딩 자료를 참고하여 정리한 문서입니다.
         </p>
         <p>
-		실제 모딩은 개인의 플레이 스타일, 콘텐츠, 취향에 따라 달라질 수 있으며<br />
-		그대로 모딩을 해도 무방하나 내용을 이해한 뒤 본인에게 맞게 변형해서 사용하는 것을 권장합니다.
+          실제 모딩은 개인의 플레이 스타일, 콘텐츠, 취향에 따라 달라질 수 있으며<br />
+          그대로 모딩을 해도 무방하나 내용을 이해한 뒤 본인에게 맞게 변형해서 사용하는 것을 권장합니다.
         </p>
       </section>
 
@@ -213,7 +219,7 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
 
         return (
           <section class="category">
-            <details>
+            <details data-part={partKey}>
               <summary>
                 <span class="category-title">
                   <span class="chev" aria-hidden="true"></span>
@@ -222,21 +228,27 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
                 <span class="count">{list.length}개</span>
               </summary>
 
-              <ul>
-                {list.map((post) => (
-                  <li>
-                    <a href={`/moding/${post.id}/`}>
-                      {post.data.heroImage && (
-                        <Image width={720} height={360} src={post.data.heroImage} alt="" />
-                      )}
-                      <h4 class="title">{post.data.title}</h4>
-                      <p class="date">
-                        <FormattedDate date={post.data.pubDate} />
-                      </p>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              {/* ✅ 여기부터가 추가/변경 포인트 */}
+              <div class="accordion-body">
+                <div class="accordion-inner">
+                  <ul>
+                    {list.map((post) => (
+                      <li>
+                        <a href={`/moding/${post.id}/`}>
+                          {post.data.heroImage && (
+                            <Image width={720} height={360} src={post.data.heroImage} alt="" />
+                          )}
+                          <h4 class="title">{post.data.title}</h4>
+                          <p class="date">
+                            <FormattedDate date={post.data.pubDate} />
+                          </p>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              {/* ✅ 여기까지 */}
             </details>
           </section>
         );

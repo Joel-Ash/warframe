@@ -2,7 +2,16 @@
   The CSS in this style tag is based off of Bear Blog's default CSS.
   https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
+*/
+
+/* =========================
+   🧱 Scrollbar layout fix
+   ========================= */
+html {
+	scrollbar-gutter: stable;
+	/* fallback */
+	overflow-y: scroll;
+}
 
 :root {
 	--accent: #2337ff;
@@ -37,12 +46,10 @@
 		--accent: #9bbcff;
 		--accent-dark: #5f7cff;
 
-		/* Bear Blog tokens override */
 		--gray-light: 40, 44, 60;
 		--gray-dark: 220, 224, 240;
 		--gray-gradient: rgba(18, 20, 28, 90%), rgba(14, 14, 17, 100%);
 
-		/* Theme tokens */
 		--bg-main: #0e0e11;
 		--text-main: #e6e8ef;
 		--heading-color: #f2f4ff;
@@ -57,7 +64,6 @@
 
 /* =========================
    🌙 Manual Dark Mode (toggle)
-   - Overrides system when set
    ========================= */
 :root[data-theme="dark"] {
 	--accent: #9bbcff;
@@ -78,11 +84,9 @@
 		0 18px 40px rgba(0, 0, 0, 45%);
 }
 
-/* Optional: manual Light mode (if you later want a ☀️ forced mode)
-:root[data-theme="light"] {
-}
-*/
-
+/* =========================
+   Fonts
+   ========================= */
 @font-face {
 	font-family: "Atkinson";
 	src: url("/fonts/atkinson-regular.woff") format("woff");
@@ -90,6 +94,7 @@
 	font-style: normal;
 	font-display: swap;
 }
+
 @font-face {
 	font-family: "Atkinson";
 	src: url("/fonts/atkinson-bold.woff") format("woff");
@@ -98,20 +103,21 @@
 	font-display: swap;
 }
 
+/* =========================
+   Base Layout
+   ========================= */
 body {
 	font-family: "Atkinson", sans-serif;
 	margin: 0;
 	padding: 0;
 	text-align: left;
 
-	/* ✅ was: linear-gradient(var(--gray-gradient)) */
 	background: var(--bg-main);
 	background-size: 100% 600px;
 
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 
-	/* ✅ was: rgb(var(--gray-dark)) */
 	color: var(--text-main);
 
 	font-size: 20px;
@@ -125,6 +131,9 @@ main {
 	padding: 3em 1em;
 }
 
+/* =========================
+   Typography
+   ========================= */
 h1,
 h2,
 h3,
@@ -132,54 +141,69 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.5rem 0;
-
-	/* ✅ was: rgb(var(--black)) */
 	color: var(--heading-color);
-
 	line-height: 1.2;
 }
 
-h1 {
-	font-size: 3.052em;
-}
-h2 {
-	font-size: 2.441em;
-}
-h3 {
-	font-size: 1.953em;
-}
-h4 {
-	font-size: 1.563em;
-}
-h5 {
-	font-size: 1.25em;
-}
+h1 { font-size: 3.052em; }
+h2 { font-size: 2.441em; }
+h3 { font-size: 1.953em; }
+h4 { font-size: 1.563em; }
+h5 { font-size: 1.25em; }
 
 strong,
 b {
 	font-weight: 700;
 }
 
-a {
-	color: var(--accent);
-}
-a:hover {
-	color: var(--accent);
-}
-
 p {
 	margin-bottom: 1em;
 }
+
 .prose p {
 	margin-bottom: 2em;
 }
 
-textarea {
-	width: 100%;
-	font-size: 16px;
+/* =========================
+   Links & Inline
+   ========================= */
+a {
+	color: var(--accent);
+	text-decoration: none;
 }
-input {
-	font-size: 16px;
+
+a:hover {
+	color: var(--accent);
+}
+
+code {
+	padding: 2px 5px;
+	background-color: var(--code-bg);
+	border-radius: 2px;
+}
+
+/* =========================
+   Blocks
+   ========================= */
+pre {
+	padding: 1.5em;
+	border-radius: 8px;
+}
+
+pre > code {
+	all: unset;
+}
+
+blockquote {
+	border-left: 4px solid var(--accent);
+	padding-left: 20px;
+	margin: 0;
+	font-size: 1.333em;
+}
+
+hr {
+	border: none;
+	border-top: 1px solid rgb(var(--gray-light));
 }
 
 table {
@@ -192,36 +216,34 @@ img {
 	border-radius: 8px;
 }
 
-code {
-	padding: 2px 5px;
-
-	/* ✅ was: rgb(var(--gray-light)) */
-	background-color: var(--code-bg);
-
-	border-radius: 2px;
+/* =========================
+   Forms
+   ========================= */
+textarea,
+input {
+	font-size: 16px;
+	width: 100%;
 }
 
-pre {
-	padding: 1.5em;
-	border-radius: 8px;
-}
-
-pre > code {
-	all: unset;
-}
-
-blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
+/* =========================
+   Accessibility
+   ========================= */
+.sr-only {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
 	margin: 0;
-	font-size: 1.333em;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
 }
 
-hr {
-	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
-}
-
+/* =========================
+   Responsive
+   ========================= */
 @media (max-width: 720px) {
 	body {
 		font-size: 18px;
@@ -231,23 +253,8 @@ hr {
 	}
 }
 
-.sr-only {
-	border: 0;
-	padding: 0;
-	margin: 0;
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
-	clip: rect(1px 1px 1px 1px);
-	clip: rect(1px, 1px, 1px, 1px);
-	clip-path: inset(50%);
-	white-space: nowrap;
-}
-
 /* =========================
-   🌙 Theme Toggle Button Style
-   (You can place button in Header.astro)
+   Theme Toggle Button
    ========================= */
 #theme-toggle {
 	background: none;
