@@ -39,7 +39,9 @@ import HeaderLink from "./HeaderLink.astro";
 
   h2 {
     margin: 0;
-    font-size: 1em;
+    /* ✅ 로고(왼쪽 이니셜)만 살짝 키워서 탭과 시각 균형 */
+    font-size: 1.08em;        /* 🔥 핵심 */
+    line-height: 1;           /* 🔥 시각 높이 정리 */
     justify-self: start;
     min-width: 0;
   }
@@ -78,10 +80,11 @@ import HeaderLink from "./HeaderLink.astro";
     white-space: nowrap;
   }
 
+  /* ✅ 선택된 탭도 동일한 굵기 유지 */
   nav a.active {
     border-bottom-color: var(--accent);
     color: var(--accent);
-    font-weight: inherit;
+    font-weight: 700;
   }
 
   @media (max-width: 720px) {
@@ -90,6 +93,10 @@ import HeaderLink from "./HeaderLink.astro";
     }
     nav a {
       padding: 0 0.7rem;
+    }
+    /* ✅ 모바일에서도 로고 너무 커보이지 않게 살짝만 */
+    h2 {
+      font-size: 1.06em;
     }
   }
 
@@ -107,6 +114,7 @@ import HeaderLink from "./HeaderLink.astro";
     nav a.active {
       color: var(--accent);
       border-bottom-color: var(--accent);
+      font-weight: 700;
     }
   }
 </style>
@@ -184,9 +192,7 @@ import HeaderLink from "./HeaderLink.astro";
         markForceTopForPath(nextPath);
       };
 
-      // ✅ 모바일: click보다 먼저 잡는다
       document.addEventListener("pointerdown", markForceTopIfTab, true);
-      // ✅ 데스크탑/키보드 접근성용
       document.addEventListener("click", markForceTopIfTab, true);
 
       // =========================================================
@@ -224,8 +230,6 @@ import HeaderLink from "./HeaderLink.astro";
 
       // =========================================================
       // 3) 아코디언 애니메이션 (grid-template-rows: 0fr ↔ 1fr)
-      //    ✅ 닫힘 애니메이션: 끝난 뒤 open=false
-      //    ✅ "동시" 동작: A 닫히면서 B 바로 열리기
       // =========================================================
       const detailsKey = () => "details:" + location.pathname;
       const DSEL = "details[data-part]";
@@ -445,7 +449,6 @@ import HeaderLink from "./HeaderLink.astro";
             return;
           }
 
-          // 닫기
           if (details.open) {
             await animateTo(details, false);
             details.open = false;
@@ -453,7 +456,6 @@ import HeaderLink from "./HeaderLink.astro";
             return;
           }
 
-          // 열기(동시): 다른 폴더 닫히는 동안 현재 폴더도 같이 열림
           const closeTasks = closeOthersConcurrent(details);
 
           details.open = true;
