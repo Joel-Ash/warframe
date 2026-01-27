@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "moding/weapons/나타루크-아이돌론.md",
+                "file": "moding/warframes/단테-아이돌론.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "나타루크-아이돌론"
+              "title": "단테-아이돌론"
             }
           }
         ]
@@ -182,6 +182,7 @@
   },
   "active": "030dda421ff8a541",
   "lastOpenFiles": [
+    "moding/weapons/나타루크-아이돌론.md",
     "moding/warframes/해로우-아이돌론.md",
     "moding/warframes/트리니티-아이돌론.md",
     "moding/warframes/크로마-아이돌론.md",
@@ -207,7 +208,6 @@
     "guide/missions/페리타-반란.md",
     "guide/basics/멀티샷.md",
     "guide/upgrades/인카논-주차별-정리.md",
-    "main/warframe-메인-퀘스트.md",
     "무제",
     "무제.base",
     "guide/images/critical-damage-scaling-table.png",
