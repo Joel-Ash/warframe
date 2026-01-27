@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "moding/warframes/단테-아이돌론.md",
+                "file": "moding/warframes/단테-만능-모딩.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "단테-아이돌론"
+              "title": "단테-만능-모딩"
             }
           }
         ]
@@ -182,6 +182,9 @@
   },
   "active": "030dda421ff8a541",
   "lastOpenFiles": [
+    "guide/upgrades/인카논-주차별-정리.md",
+    "guide/missions/아이돌론-레이드.md",
+    "moding/warframes/단테-만능-모딩.md",
     "moding/weapons/나타루크-아이돌론.md",
     "moding/warframes/해로우-아이돌론.md",
     "moding/warframes/트리니티-아이돌론.md",
@@ -203,11 +206,8 @@
     "guide/basics/최종피해량.md",
     "guide/basics/실드-게이트.md",
     "guide/basics/치명타.md",
-    "guide/missions/아이돌론-레이드.md",
     "guide/mod-system/갈바나이즈드-모드.md",
     "guide/missions/페리타-반란.md",
-    "guide/basics/멀티샷.md",
-    "guide/upgrades/인카논-주차별-정리.md",
     "무제",
     "무제.base",
     "guide/images/critical-damage-scaling-table.png",

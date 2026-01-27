@@ -1,5 +1,6 @@
 {
   "showUnsupportedFiles": false,
   "promptDelete": true,
-  "propertiesInDocument": "visible"
+  "propertiesInDocument": "visible",
+  "alwaysUpdateLinks": true
 }
