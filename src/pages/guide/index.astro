@@ -17,10 +17,10 @@ function getPartFromId(id: string) {
 }
 
 const PART_LABELS: Record<string, string> = {
-  'basics': '기초 이해',
+  basics: '기초 이해',
   'mod-system': '모드 시스템',
-  'upgrades': '모드 외 업그레이드',
-  'missions': '미션',
+  upgrades: '모드 외 업그레이드',
+  missions: '미션',
   'micro-tips': '미세먼지 시리즈',
 };
 
@@ -216,6 +216,14 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
       {groups.map(([partKey, list]) => {
         const label = PART_LABELS[partKey] ?? partKey;
 
+        // ✅ 파트 내부 정렬: order 우선 → 없으면 제목(가나다) 순
+        const sortedList = [...list].sort((a, b) => {
+          return (
+            (a.data.order ?? 999) - (b.data.order ?? 999) ||
+            a.data.title.localeCompare(b.data.title, 'ko')
+          );
+        });
+
         return (
           <section class="category">
             <details data-part={partKey}>
@@ -224,17 +232,22 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
                   <span class="chev" aria-hidden="true"></span>
                   <span>{label}</span>
                 </span>
-                <span class="count">{list.length}개</span>
+                <span class="count">{sortedList.length}개</span>
               </summary>
 
               <div class="accordion-body">
                 <div class="accordion-inner">
                   <ul>
-                    {list.map((post) => (
+                    {sortedList.map((post) => (
                       <li>
                         <a href={`/guide/${post.id}/`}>
                           {post.data.heroImage && (
-                            <Image width={720} height={360} src={post.data.heroImage} alt="" />
+                            <Image
+                              width={720}
+                              height={360}
+                              src={post.data.heroImage}
+                              alt=""
+                            />
                           )}
                           <h4 class="title">{post.data.title}</h4>
                           <p class="date">
