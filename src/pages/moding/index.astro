@@ -7,8 +7,8 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
-const posts = (await getCollection('moding')).sort(
-  (a, b) => a.data.title.localeCompare(b.data.title, 'ko')
+const posts = (await getCollection('moding')).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title, 'ko'),
 );
 
 function getPartFromId(id: string) {
@@ -17,9 +17,9 @@ function getPartFromId(id: string) {
 }
 
 const PART_LABELS: Record<string, string> = {
-  'warframes': '워프레임',
-  'weapons': '무기',
-  'companions': '동반자',
+  warframes: '워프레임',
+  weapons: '무기',
+  companions: '동반자',
 };
 
 const PART_ORDER = ['warframes', 'weapons', 'companions'];
@@ -72,6 +72,19 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
         border-radius: 12px;
         overflow: hidden;
         background: rgba(0, 0, 0, 0.15);
+
+        /* ✅ 추가: 테두리 전환만 부드럽게 */
+        transition: border-color 0.18s ease;
+      }
+
+      /* ✅ 추가: 마우스 올리면 "테두리만" 강조 */
+      details:hover {
+        border-color: rgba(var(--accent), 0.55);
+      }
+
+      /* ✅ 추가: 열려있을 때도 테두리 강조 유지 */
+      details[open] {
+        border-color: rgba(var(--accent), 0.65);
       }
 
       summary {
@@ -160,10 +173,11 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
         font-weight: 700;
       }
 
+      /* ✅ 날짜 블록: FormattedDate가 2줄일 수 있으니 div */
       .date {
         margin: 0.35rem 0 0;
-        color: rgba(255, 255, 255, 0.55);
         font-size: 0.92rem;
+        color: rgba(255, 255, 255, 0.55);
       }
 
       ul li a:hover .title,
@@ -230,12 +244,22 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
                       <li>
                         <a href={`/moding/${post.id}/`}>
                           {post.data.heroImage && (
-                            <Image width={720} height={360} src={post.data.heroImage} alt="" />
+                            <Image
+                              width={720}
+                              height={360}
+                              src={post.data.heroImage}
+                              alt=""
+                            />
                           )}
+
                           <h4 class="title">{post.data.title}</h4>
-                          <p class="date">
-                            <FormattedDate date={post.data.pubDate} />
-                          </p>
+
+                          <div class="date">
+                            <FormattedDate
+                              date={post.data.pubDate}
+                              updatedDate={post.data.updatedDate}
+                            />
+                          </div>
                         </a>
                       </li>
                     ))}

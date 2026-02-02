@@ -56,12 +56,13 @@ const { title, description, pubDate, updatedDate, heroImage } =
       .title h1 {
         margin: 0 0 0.5em 0;
       }
+
+      /* ✅ 날짜 영역 */
       .date {
         margin-bottom: 0.5em;
         color: rgb(var(--gray));
-      }
-      .last-updated-on {
-        font-style: italic;
+        display: flex;
+        justify-content: center;
       }
     </style>
   </head>
@@ -76,15 +77,9 @@ const { title, description, pubDate, updatedDate, heroImage } =
 
         <div class="prose">
           <div class="title">
+            <!-- ✅ 날짜는 FormattedDate 한 번만 출력 -->
             <div class="date">
-              <FormattedDate date={pubDate} />
-              {
-                updatedDate && (
-                  <div class="last-updated-on">
-                    Last updated on <FormattedDate date={updatedDate} />
-                  </div>
-                )
-              }
+              <FormattedDate date={pubDate} updatedDate={updatedDate} />
             </div>
 
             <h1>{title}</h1>

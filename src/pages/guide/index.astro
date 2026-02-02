@@ -7,8 +7,8 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
-const posts = (await getCollection('guide')).sort(
-  (a, b) => a.data.title.localeCompare(b.data.title, 'ko')
+const posts = (await getCollection('guide')).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title, 'ko'),
 );
 
 function getPartFromId(id: string) {
@@ -74,6 +74,19 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
         border-radius: 12px;
         overflow: hidden;
         background: rgba(0, 0, 0, 0.15);
+
+        /* ✅ 추가: 테두리 강조 전환만 부드럽게 */
+        transition: border-color 0.18s ease;
+      }
+
+      /* ✅ 추가: 마우스 올렸을 때 "테두리만" 강조 */
+      details:hover {
+        border-color: rgba(var(--accent), 0.55);
+      }
+
+      /* ✅ 추가(권장): 열린 상태(open)도 테두리 강조 유지 */
+      details[open] {
+        border-color: rgba(var(--accent), 0.65);
       }
 
       summary {
@@ -118,7 +131,6 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
         transform: rotate(45deg);
       }
 
-      /* ✅ Header.astro 스크립트가 사용하는 구조 */
       .accordion-body {
         border-top: 1px solid rgba(255, 255, 255, 0.06);
       }
@@ -165,8 +177,8 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
 
       .date {
         margin: 0.35rem 0 0;
-        color: rgba(255, 255, 255, 0.55);
         font-size: 0.92rem;
+        color: rgba(255, 255, 255, 0.55);
       }
 
       ul li a:hover .title,
@@ -216,7 +228,6 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
       {groups.map(([partKey, list]) => {
         const label = PART_LABELS[partKey] ?? partKey;
 
-        // ✅ 파트 내부 정렬: order 우선 → 없으면 제목(가나다) 순
         const sortedList = [...list].sort((a, b) => {
           return (
             (a.data.order ?? 999) - (b.data.order ?? 999) ||
@@ -249,10 +260,15 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
                               alt=""
                             />
                           )}
+
                           <h4 class="title">{post.data.title}</h4>
-                          <p class="date">
-                            <FormattedDate date={post.data.pubDate} />
-                          </p>
+
+                          <div class="date">
+                            <FormattedDate
+                              date={post.data.pubDate}
+                              updatedDate={post.data.updatedDate}
+                            />
+                          </div>
                         </a>
                       </li>
                     ))}

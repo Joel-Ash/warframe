@@ -1,17 +1,31 @@
 ---
 interface Props {
-	date: Date;
+  date: Date;
+  updatedDate?: Date;
 }
 
-const { date } = Astro.props;
+const { date, updatedDate } = Astro.props;
+
+const ymd = (d: Date) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+};
+
+const pub = date;
+const upd = updatedDate ?? date;
 ---
 
-<time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('en-us', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-		})
-	}
-</time>
+<span class="dates">
+  <time datetime={pub.toISOString()}>작성일: {ymd(pub)}</time>
+  <time datetime={upd.toISOString()}>최종 수정일: {ymd(upd)}</time>
+</span>
+
+<style>
+  .dates {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+</style>

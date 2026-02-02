@@ -1,7 +1,8 @@
 ---
-title: 'Warframe 메인 퀘스트 진행 순서'
-description: '메인 퀘스트 정리 글'
-pubDate: '2026-01-10'
+title: Warframe 메인 퀘스트 진행 순서
+description: 메인 퀘스트 정리 글
+pubDate: 2026-01-10
+updatedDate: 2026-01-10
 ---
 
 #### 메인 퀘스트 진행 순서
