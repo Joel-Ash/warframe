@@ -2,5 +2,6 @@
   "showUnsupportedFiles": false,
   "promptDelete": true,
   "propertiesInDocument": "visible",
-  "alwaysUpdateLinks": true
+  "alwaysUpdateLinks": false,
+  "useMarkdownLinks": true
 }
