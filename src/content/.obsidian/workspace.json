@@ -11,10 +11,14 @@
             "id": "834fd0b021d7cbac",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "guide/upgrades/헬민스-집정관-샤드.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "새 탭"
+              "title": "헬민스-집정관-샤드"
             }
           }
         ]
