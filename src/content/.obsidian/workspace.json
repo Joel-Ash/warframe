@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "guide/upgrades/인카논-순환로.md",
+                "file": "guide/upgrades/아케인.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "인카논-순환로"
+              "title": "아케인"
             }
           }
         ]
@@ -182,16 +182,8 @@
   },
   "active": "834fd0b021d7cbac",
   "lastOpenFiles": [
-    "guide/upgrades/인카논-개요.md",
-    "guide/upgrades/아케인.md",
     "guide/upgrades/인카논-순환로.md",
-    "guide/upgrades/인카논-주차별-정리.md",
-    "guide/upgrades/헬민스-개요.md",
-    "guide/upgrades/헬민스-석비.md",
-    "guide/upgrades/헬민스-집정관-샤드.md",
-    "moding/warframes/볼트-아이돌론.md",
-    "moding/warframes/단테-만능-모딩.md",
-    "moding/warframes/네크로스-농부.md",
+    "guide/upgrades/아케인.md",
     "guide/mod-system/프라임드-모드.md",
     "guide/mod-system/특정-모드-칸.md",
     "guide/mod-system/리벤-모드.md",
@@ -208,6 +200,14 @@
     "guide/micro-tips/숙련도-1탄.md",
     "guide/micro-tips/속성피해 조합.md",
     "guide/micro-tips/모드-수용량.md",
+    "guide/basics/치명타.md",
+    "guide/basics/트루데미지.md",
+    "guide/basics/피해량.md",
+    "guide/basics/속성피해.md",
+    "guide/basics/멀티샷.md",
+    "guide/basics/최종피해량.md",
+    "guide/basics/실드-게이트.md",
+    "guide/basics/신디케이트-6진영.md",
     "무제",
     "무제.base",
     "guide/images/critical-damage-scaling-table.png",
