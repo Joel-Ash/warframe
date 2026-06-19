@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "guide/upgrades/아케인.md",
+                "file": "main/warframe-메인-퀘스트.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "아케인"
+              "title": "warframe-메인-퀘스트"
             }
           }
         ]
@@ -182,8 +182,8 @@
   },
   "active": "834fd0b021d7cbac",
   "lastOpenFiles": [
-    "guide/upgrades/인카논-순환로.md",
     "guide/upgrades/아케인.md",
+    "guide/upgrades/인카논-순환로.md",
     "guide/mod-system/프라임드-모드.md",
     "guide/mod-system/특정-모드-칸.md",
     "guide/mod-system/리벤-모드.md",
