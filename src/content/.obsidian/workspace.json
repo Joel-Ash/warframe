@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "guide/mod-system/개요.md",
+                "file": "guide/missions/중재-강철의-길.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "개요"
+              "title": "중재-강철의-길"
             }
           }
         ]
@@ -182,6 +182,7 @@
   },
   "active": "834fd0b021d7cbac",
   "lastOpenFiles": [
+    "guide/mod-system/개요.md",
     "guide/mod-system/갈바나이즈드-모드.md",
     "guide/basics/최종피해량.md",
     "guide/basics/실드-게이트.md",
@@ -199,7 +200,6 @@
     "guide/mod-system/리벤-모드.md",
     "guide/mod-system/기초모드-심화.md",
     "guide/mod-system/기초모드.md",
-    "guide/mod-system/개요.md",
     "guide/upgrades/헬민스-집정관-샤드.md",
     "guide/mod-system/프라임드-모드.md",
     "guide/mod-system/특정-모드-칸.md",
