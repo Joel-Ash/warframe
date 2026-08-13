@@ -11,10 +11,14 @@
             "id": "aefbd8a9ab915d6a",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "그래프 뷰"
+              "type": "markdown",
+              "state": {
+                "file": "guide/upgrades/인카논-주차별-정리.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "인카논-주차별-정리"
             }
           }
         ]
