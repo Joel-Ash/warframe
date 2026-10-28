@@ -1,10 +1,9 @@
 ---
 interface Props {
-  date: Date;
   updatedDate?: Date;
 }
 
-const { date, updatedDate } = Astro.props;
+const { updatedDate } = Astro.props;
 
 const ymd = (d: Date) => {
   const y = d.getFullYear();
@@ -12,15 +11,17 @@ const ymd = (d: Date) => {
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 };
-
-const pub = date;
-const upd = updatedDate ?? date;
 ---
 
-<span class="dates">
-  <time datetime={pub.toISOString()}>작성일: {ymd(pub)}</time>
-  <time datetime={upd.toISOString()}>최종 수정일: {ymd(upd)}</time>
-</span>
+{
+  updatedDate && (
+    <span class="dates">
+      <time datetime={updatedDate.toISOString()}>
+        업데이트 날짜: {ymd(updatedDate)}
+      </time>
+    </span>
+  )
+}
 
 <style>
   .dates {

@@ -205,55 +205,30 @@ import HeaderLink from "./HeaderLink.astro";
       );
 
       // =========================================================
-      // 2) 스크롤 기억/복원 (탭 이동 시는 최상단 강제)
-      // =========================================================
-      if ("scrollRestoration" in history) {
-        history.scrollRestoration = "manual";
-      }
+// 2) 스크롤 관리
+// 새 링크: 맨 위 / 뒤로가기·앞으로가기: 위치 복원
+// =========================================================
 
-      const scrollKey = () => "scroll:" + location.pathname;
+// 브라우저가 방문 기록 항목별 스크롤 위치를 관리
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "auto";
+}
 
-      const restoreScroll = () => {
-        const forcePath = sessionStorage.getItem(FORCE_TOP_KEY);
+// 상단 탭 클릭으로 이동한 경우에는 최상단으로 이동
+window.addEventListener("pageshow", () => {
+  const forcePath = sessionStorage.getItem(FORCE_TOP_KEY);
 
-        if (
-          forcePath &&
-          forcePath === normalizePath(location.pathname)
-        ) {
-          sessionStorage.removeItem(FORCE_TOP_KEY);
-          sessionStorage.removeItem(scrollKey());
+  if (
+    forcePath &&
+    forcePath === normalizePath(location.pathname)
+  ) {
+    sessionStorage.removeItem(FORCE_TOP_KEY);
 
-          requestAnimationFrame(() => {
-            window.scrollTo({
-              top: 0,
-              left: 0,
-              behavior: "instant"
-            });
-          });
-
-          return;
-        }
-
-        const saved = sessionStorage.getItem(scrollKey());
-
-        if (saved !== null) {
-          const y = Number(saved);
-
-          if (!Number.isNaN(y)) {
-            requestAnimationFrame(() => {
-              window.scrollTo(0, y);
-            });
-          }
-        }
-      };
-
-      const saveScroll = () => {
-        sessionStorage.setItem(scrollKey(), String(window.scrollY || 0));
-      };
-
-      window.addEventListener("pageshow", restoreScroll);
-      window.addEventListener("pagehide", saveScroll);
-      window.addEventListener("beforeunload", saveScroll);
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+    });
+  }
+});
 
       // =========================================================
       // 3) 아코디언 애니메이션 (grid-template-rows: 0fr ↔ 1fr)

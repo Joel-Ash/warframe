@@ -13,12 +13,11 @@ import Header from "../components/Header.astro";
 type Props = {
   title: string;
   description?: string;
-  pubDate: Date;
   updatedDate?: Date;
   heroImage?: any;
 };
 
-const { title, description, pubDate, updatedDate, heroImage } =
+const { title, description, updatedDate, heroImage } =
   Astro.props as Props;
 ---
 
@@ -79,7 +78,7 @@ const { title, description, pubDate, updatedDate, heroImage } =
           <div class="title">
             <!-- ✅ 날짜는 FormattedDate 한 번만 출력 -->
             <div class="date">
-              <FormattedDate date={pubDate} updatedDate={updatedDate} />
+              <FormattedDate updatedDate={updatedDate} />
             </div>
 
             <h1>{title}</h1>
@@ -126,37 +125,5 @@ const { title, description, pubDate, updatedDate, heroImage } =
       </style>
     </main>
     <Footer />
-
-    <!-- ✅ 뒤로가기 시 스크롤 위치 기억/복원 -->
-    <script is:inline>
-      (() => {
-        try {
-          if ("scrollRestoration" in history) {
-            history.scrollRestoration = "manual";
-          }
-
-          const key = "scroll:" + location.pathname;
-
-          // 복원 (뒤로가기 / bfcache 포함)
-          window.addEventListener("pageshow", () => {
-            const saved = sessionStorage.getItem(key);
-            if (saved !== null) {
-              const y = Number(saved);
-              if (!Number.isNaN(y)) {
-                requestAnimationFrame(() => window.scrollTo(0, y));
-              }
-            }
-          });
-
-          // 저장
-          const save = () => {
-            sessionStorage.setItem(key, String(window.scrollY || 0));
-          };
-
-          window.addEventListener("pagehide", save);
-          window.addEventListener("beforeunload", save);
-        } catch (e) {}
-      })();
-    </script>
   </body>
 </html>

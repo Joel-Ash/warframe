@@ -264,10 +264,7 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
                           <h4 class="title">{post.data.title}</h4>
 
                           <div class="date">
-                            <FormattedDate
-                              date={post.data.pubDate}
-                              updatedDate={post.data.updatedDate}
-                            />
+                            <FormattedDate updatedDate={post.data.updatedDate} />
                           </div>
                         </a>
                       </li>

@@ -8,7 +8,9 @@ import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('main')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  (a, b) =>
+    (b.data.updatedDate?.getTime() ?? 0) -
+    (a.data.updatedDate?.getTime() ?? 0),
 );
 ---
 
@@ -83,7 +85,6 @@ const posts = (await getCollection('main')).sort(
         font-weight: 800;
       }
 
-      /* ✅ 날짜 블록: FormattedDate가 2줄일 수 있으니 div */
       .date {
         margin: 0.4rem 0 0;
         font-size: 0.92rem;
@@ -148,11 +149,7 @@ const posts = (await getCollection('main')).sort(
 
                 <h4 class="title">{post.data.title}</h4>
 
-                <div class="date">
-                  <FormattedDate
-                    date={post.data.pubDate}
-                    updatedDate={post.data.updatedDate}
-                  />
+                <FormattedDate updatedDate={post.data.updatedDate} />
                 </div>
               </a>
             </li>

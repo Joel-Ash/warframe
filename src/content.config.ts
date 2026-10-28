@@ -7,10 +7,8 @@ const baseSchema = ({ image }: any) =>
     title: z.string(),
     description: z.string(),
 
-    // ✅ 작성일
-    pubDate: z.coerce.date(),
 
-    // ✅ 최종 수정일(옵션)
+    // ✅ 업데이트 날짜(옵션)
     updatedDate: z.coerce.date().optional(),
 
     // ✅ 대표 이미지(옵션)
