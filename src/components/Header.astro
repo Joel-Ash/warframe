@@ -149,51 +149,60 @@ import HeaderLink from "./HeaderLink.astro";
       sessionStorage.setItem(TAB_KEY, currentTab);
       sessionStorage.setItem(PATH_KEY, location.pathname);
 
-      // =========================================================
-      // 1) 탭 클릭 이동 시: (모바일 포함) 다음 페이지는 무조건 최상단
+        // =========================================================
+      // 1) 상단 탭 클릭 시: 스크롤 + 아코디언 초기화
       // =========================================================
       const FORCE_TOP_KEY = "force-top-next-path";
 
-      const normPath = (href) => {
-        try {
-          const u = new URL(href, location.origin);
-          return u.pathname;
-        } catch (_) {
-          return String(href).split("#")[0].split("?")[0];
+      const normalizePath = (path) => {
+        const normalized = path.replace(/\/+$/, "");
+        return normalized || "/";
+      };
+
+      const isMainTab = (path) =>
+        ["/main", "/guide", "/moding"].includes(normalizePath(path));
+
+      const resetOnHeaderTabClick = (e) => {
+        // 상단 헤더의 링크만 대상으로 처리
+        const link = e.target.closest("header nav a[href]");
+        if (!link) return;
+
+        // 일반적인 좌클릭 이동만 처리
+        if (e.type === "click") {
+          if (e.button !== 0) return;
+          if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
         }
-      };
 
-      const isTabHref = (pathname) =>
-        pathname === "/main" ||
-        pathname === "/guide" ||
-        pathname === "/moding" ||
-        pathname.startsWith("/main") ||
-        pathname.startsWith("/guide") ||
-        pathname.startsWith("/moding");
+        if (link.target === "_blank" || link.hasAttribute("download")) {
+          return;
+        }
 
-      const markForceTopForPath = (nextPath) => {
-        sessionStorage.setItem(FORCE_TOP_KEY, nextPath);
+        const url = new URL(link.href, location.href);
+
+        if (url.origin !== location.origin) return;
+
+        const nextPath = normalizePath(url.pathname);
+
+        // 메인 / 가이드 / 모딩 목록 탭만 초기화
+        if (!isMainTab(nextPath)) return;
+
+        // 다음 페이지의 스크롤 기록 삭제
         sessionStorage.removeItem("scroll:" + nextPath);
+        sessionStorage.removeItem("scroll:" + nextPath + "/");
+
+        // 다음 페이지의 아코디언 기록 삭제
+        sessionStorage.removeItem("details:" + nextPath);
+        sessionStorage.removeItem("details:" + nextPath + "/");
+
+        // 다음 페이지에서 맨 위로 이동하도록 표시
+        sessionStorage.setItem(FORCE_TOP_KEY, nextPath);
       };
 
-      const markForceTopIfTab = (e) => {
-        const a = e.target?.closest && e.target.closest("a[href]");
-        if (!a) return;
-
-        const href = a.getAttribute("href");
-        if (!href) return;
-
-        if (a.target === "_blank" || a.hasAttribute("download")) return;
-        if (/^mailto:/i.test(href) || /^tel:/i.test(href)) return;
-
-        const nextPath = normPath(href);
-        if (!isTabHref(nextPath)) return;
-
-        markForceTopForPath(nextPath);
-      };
-
-      document.addEventListener("pointerdown", markForceTopIfTab, true);
-      document.addEventListener("click", markForceTopIfTab, true);
+      document.addEventListener(
+        "click",
+        resetOnHeaderTabClick,
+        true
+      );
 
       // =========================================================
       // 2) 스크롤 기억/복원 (탭 이동 시는 최상단 강제)
@@ -206,17 +215,35 @@ import HeaderLink from "./HeaderLink.astro";
 
       const restoreScroll = () => {
         const forcePath = sessionStorage.getItem(FORCE_TOP_KEY);
-        if (forcePath === location.pathname) {
+
+        if (
+          forcePath &&
+          forcePath === normalizePath(location.pathname)
+        ) {
           sessionStorage.removeItem(FORCE_TOP_KEY);
           sessionStorage.removeItem(scrollKey());
-          requestAnimationFrame(() => window.scrollTo(0, 0));
+
+          requestAnimationFrame(() => {
+            window.scrollTo({
+              top: 0,
+              left: 0,
+              behavior: "instant"
+            });
+          });
+
           return;
         }
 
         const saved = sessionStorage.getItem(scrollKey());
+
         if (saved !== null) {
           const y = Number(saved);
-          if (!Number.isNaN(y)) requestAnimationFrame(() => window.scrollTo(0, y));
+
+          if (!Number.isNaN(y)) {
+            requestAnimationFrame(() => {
+              window.scrollTo(0, y);
+            });
+          }
         }
       };
 
