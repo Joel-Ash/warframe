@@ -2,6 +2,19 @@
 import { mkdir, readdir, writeFile, readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
+
+const isShallow = execFileSync(
+  "git",
+  ["rev-parse", "--is-shallow-repository"],
+  { encoding: "utf8" }
+).trim() === "true";
+
+if (isShallow) {
+  execFileSync("git", ["fetch", "--unshallow"], {
+    stdio: "inherit",
+  });
+}
 
 const contentRoot = path.resolve("src/content");
 const outputPath = path.resolve("src/generated/update-dates.json");
