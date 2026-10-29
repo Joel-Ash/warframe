@@ -70,23 +70,27 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
       }
 
       details {
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 12px;
-        overflow: hidden;
-        background: rgba(0, 0, 0, 0.15);
+       border: 1px solid rgba(255, 255, 255, 0.08);
+       border-radius: 12px;
+       overflow: hidden;
+       background: rgba(0, 0, 0, 0.15);
 
-        /* ✅ 추가: 테두리 강조 전환만 부드럽게 */
-        transition: border-color 0.18s ease;
+       transition:
+        border-color 0.5s ease,
+        background-color 0.5s ease;
       }
 
-      /* ✅ 추가: 마우스 올렸을 때 "테두리만" 강조 */
-      details:hover {
-        border-color: rgba(var(--accent), 0.55);
+      /* PC: 닫힌 폴더에 마우스를 올렸을 때 */
+      @media (hover: hover) and (pointer: fine) {
+        details:not([open]):hover {
+         border-color: rgba(90, 170, 255, 0.35);
+        }
       }
 
-      /* ✅ 추가(권장): 열린 상태(open)도 테두리 강조 유지 */
+      /* 열린 폴더: 테두리와 배경 강조 */
       details[open] {
-        border-color: rgba(var(--accent), 0.65);
+       border-color: rgba(90, 170, 255, 0.70);
+       background: rgba(90, 170, 255, 0.08);
       }
 
       summary {
@@ -131,12 +135,24 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
         transform: rotate(45deg);
       }
 
-      .accordion-body {
+      .animated-accordion .accordion-body {
         border-top: 1px solid rgba(255, 255, 255, 0.06);
+        overflow: hidden;
       }
 
-      .accordion-inner {
+      .animated-accordion .accordion-inner {
         min-height: 0;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .animated-accordion .accordion-body {
+          transition: none;
+        }
+      }
+
+      details[open] .accordion-body {
+        grid-template-rows: 1fr;
+        opacity: 1;
       }
 
       ul {
@@ -237,7 +253,7 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
 
         return (
           <section class="category">
-            <details data-part={partKey}>
+            <details data-part={partKey} class="animated-accordion">
               <summary>
                 <span class="category-title">
                   <span class="chev" aria-hidden="true"></span>
@@ -281,6 +297,7 @@ const groups = Array.from(grouped.entries()).sort(([a], [b]) => {
     <Footer />
     <script>
       import '../../scripts/swipe-tabs';
+      import '../../scripts/accordion';
     </script>
   </body>
 </html>
